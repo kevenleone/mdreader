@@ -1,4 +1,5 @@
 import { Outlet } from 'react-router-dom';
+import { Button } from 'ui';
 import ThemeSwitcher from '../../ThemeSwither';
 
 const Layout = () => {
@@ -7,6 +8,10 @@ const Layout = () => {
       <div className="py-3">
         <ThemeSwitcher />
       </div>
+
+      <Button>My name is keven</Button>
+
+      {/* <button className="bg-black rounded text-white p-5">keve</button> */}
 
       <Outlet />
     </div>
