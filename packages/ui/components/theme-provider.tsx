@@ -1,4 +1,4 @@
-import { Fragment, ReactNode } from 'react';
+import { ReactNode } from 'react';
 
 type ThemeProviderProps = {
   children: ReactNode;
@@ -11,7 +11,7 @@ const ThemeProvider: React.FC<ThemeProviderProps> = ({
   children,
   ...props
 }) => {
-  return <Fragment {...props}>{children}</Fragment>;
+  return <div {...props}>{children}</div>;
 };
 
 export { ThemeProvider };
