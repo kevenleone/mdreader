@@ -1,15 +1,9 @@
-import ThemeSwitcher from './ThemeSwither';
+import Auth from './Auth';
 
 export default function App() {
   return (
-    <div className="bg-white dark:bg-slate-900 h-screen p-10">
-      <h1 className="text-4xl text-black dark:text-white dark font-bold underline">
-        Hello world!
-      </h1>
-
-      <div className="py-3">
-        <ThemeSwitcher />
-      </div>
+    <div>
+      <Auth />
 
       <div className="bg-white dark:bg-slate-800 rounded-lg px-6 py-8 ring-1 ring-slate-900/5 shadow-xl">
         <div>
