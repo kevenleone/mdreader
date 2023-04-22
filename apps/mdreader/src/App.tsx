@@ -1,9 +1,39 @@
+import { buttonVariants } from '@mdreader/ui/Button';
 import Auth from './Auth';
 
 export default function App() {
   return (
     <div>
       <Auth />
+
+      <div className="flex max-w-[980px] flex-col items-start gap-2">
+        <h1 className="text-3xl font-extrabold leading-tight tracking-tighter sm:text-3xl md:text-5xl lg:text-6xl">
+          Beautifully designed components <br className="hidden sm:inline" />
+          built with Radix UI and Tailwind CSS.
+        </h1>
+        <p className="max-w-[700px] text-lg text-muted-foreground sm:text-xl">
+          Accessible and customizable components that you can copy and paste
+          into your apps. Free. Open Source. And Next.js 13 Ready.
+        </p>
+      </div>
+      <div className="flex gap-4">
+        <a
+          href="/"
+          target="_blank"
+          rel="noreferrer"
+          className={buttonVariants({ size: 'lg' })}
+        >
+          Documentation
+        </a>
+        <a
+          target="_blank"
+          rel="noreferrer"
+          href="/1"
+          className={buttonVariants({ variant: 'outline', size: 'lg' })}
+        >
+          GitHub
+        </a>
+      </div>
 
       <div className="bg-white dark:bg-slate-800 rounded-lg px-6 py-8 ring-1 ring-slate-900/5 shadow-xl">
         <div>
