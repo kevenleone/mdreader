@@ -10,10 +10,11 @@ interface NavItem {
 }
 
 interface MainNavProps {
+  Link: any;
   items?: NavItem[];
 }
 
-export function MainNav({ items }: MainNavProps) {
+export function MainNav({ items, Link }: MainNavProps) {
   return (
     <div className="flex gap-6 md:gap-10">
       <a href="/" className="hidden items-center space-x-2 md:flex">
@@ -27,16 +28,16 @@ export function MainNav({ items }: MainNavProps) {
           {items?.map(
             (item, index) =>
               item.href && (
-                <a
+                <Link
                   key={index}
-                  href={item.href}
+                  to={item.href}
                   className={cn(
                     'flex items-center text-lg font-semibold text-muted-foreground sm:text-sm',
                     item.disabled && 'cursor-not-allowed opacity-80'
                   )}
                 >
                   {item.title}
-                </a>
+                </Link>
               )
           )}
         </nav>

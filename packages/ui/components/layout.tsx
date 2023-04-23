@@ -1,21 +1,19 @@
-import { ThemeProvider } from './theme-provider';
 import { TailwindIndicator } from './tailwind-indicator';
-import { SiteHeader } from './site-header';
+import { SiteHeader, SiteHeaderProps } from './site-header';
 
 interface LayoutProps {
   children: React.ReactNode;
+  siteHeaderProps: SiteHeaderProps;
 }
 
-export function Layout({ children }: LayoutProps) {
+export function Layout({ children, siteHeaderProps }: LayoutProps) {
   return (
     <main>
-      <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-        <div className="relative flex min-h-screen flex-col">
-          <SiteHeader />
-          <div className="flex-1">{children}</div>
-        </div>
-        <TailwindIndicator />
-      </ThemeProvider>
+      <div className="relative flex min-h-screen flex-col">
+        <SiteHeader {...siteHeaderProps} />
+        <div className="flex-1 bg-background">{children}</div>
+      </div>
+      <TailwindIndicator />
     </main>
   );
 }

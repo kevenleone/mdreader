@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 
 const darkModeAtom = atomWithStorage('darkMode', false);
 
-const ThemeSwitcher = () => {
+const useTheme = () => {
   const [darkMode, setDarkMode] = useAtom(darkModeAtom);
 
   useEffect(() => {
@@ -15,19 +15,9 @@ const ThemeSwitcher = () => {
     document.documentElement.classList.remove('dark');
   }, [darkMode]);
 
-  return (
-    <>
-      <h1 className="dark:text-white text-black">
-        Welcome to {darkMode ? 'dark' : 'light'} mode!
-      </h1>
-      <button
-        className="dark:text-white text-black"
-        onClick={() => setDarkMode(!darkMode)}
-      >
-        toggle theme
-      </button>
-    </>
-  );
+  return {
+    toggle: () => setDarkMode((theme) => !theme),
+  };
 };
 
-export default ThemeSwitcher;
+export { useTheme };
