@@ -1,4 +1,3 @@
-import { ReactNode } from 'react';
 import { Icons } from './icons';
 import { MainNav } from './main-nav';
 import { ThemeToggle, ThemeToggleProps } from './theme-toggle';

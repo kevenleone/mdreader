@@ -2,6 +2,30 @@ import { atomWithCache } from 'jotai-cache';
 import { supabase } from '../services/supabase';
 import { sessionAtom } from '../hooks/useSession';
 import { userAtom } from './user.atom';
+import { atom } from 'jotai';
+
+export const articleSlugAtom = atom<string | null>(null);
+
+export const articleAtom = atomWithCache(async (get) => {
+  const articleSlug = get(articleSlugAtom);
+  let markdown;
+
+  const { data } = await supabase
+    .from('Articles')
+    .select('*')
+    .filter('id', 'eq', articleSlug);
+
+  if (data?.length) {
+    const response = await fetch(data[0].fileUrl);
+
+    markdown = await response.text();
+  }
+
+  return {
+    markdown,
+    article: data,
+  };
+});
 
 export const articlesAtom = atomWithCache(async (get) => {
   const userName = get(userAtom);

@@ -35,7 +35,7 @@ const MyProfile = () => {
             <FeaturedArticle
               key={index}
               gradient={colors[index]}
-              path="/"
+              path={`preview/${article.id}`}
               title={article.name}
               views={1000}
             />
@@ -51,7 +51,7 @@ const MyProfile = () => {
             title={article.name}
             Icon={File}
             description={'Github'}
-            href={article.fileUrl}
+            href={`preview/${article.id}`}
           />
         ))}
       </List>
@@ -64,7 +64,7 @@ const MyProfile = () => {
             title={folder.name}
             Icon={Folder}
             description={folder.description}
-            href={folder.fileUrl}
+            href={`preview/${folder.id}/${folder.slug}`}
           />
         ))}
       </List>

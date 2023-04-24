@@ -5,22 +5,28 @@ import App from './App';
 import Layout from './components/layout';
 import Profile from './pages/profile';
 import { ProfileOutlet } from './pages/profile/ProfileOutlet';
+import { Preview } from './pages/profile/preview';
+import { PreviewOutlet } from './pages/profile/preview/PreviewOutlet';
 
-const MDReaderRouter = () => {
-  return (
-    <BrowserRouter>
-      <Routes>
-        <Route element={<Layout />} path="/">
-          <Route element={<Home />} index />
-          <Route element={<App />} path="/app" />
-          <Route element={<ProfileOutlet />} path="/profile">
+const MDReaderRouter = () => (
+  <BrowserRouter>
+    <Routes>
+      <Route element={<Layout />} path="/">
+        <Route element={<Home />} index />
+        <Route element={<App />} path="/app" />
+        <Route element={<ProfileOutlet />} path="/profile">
+          <Route element={<Profile />} index />
+          <Route element={<ProfileOutlet />} path=":username">
             <Route element={<Profile />} index />
-            <Route element={<Profile />} path=":username" />
+
+            <Route element={<PreviewOutlet />} path="preview/:id">
+              <Route element={<Preview />} index />
+            </Route>
           </Route>
         </Route>
-      </Routes>
-    </BrowserRouter>
-  );
-};
+      </Route>
+    </Routes>
+  </BrowserRouter>
+);
 
 export default MDReaderRouter;
