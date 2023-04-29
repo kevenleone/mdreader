@@ -1,18 +1,24 @@
 import { useAtomValue } from 'jotai';
 import { articleAtom } from '../../../store/articles.atom';
-import { Markdown } from '@mdreader/md';
+
+import Article from '../../../components/article';
+import BreadCrumb from '../../../components/breadcrumb/Breadcrumb';
 
 const Preview = () => {
-  const article = useAtomValue(articleAtom);
+  const { article, markdown, commit } = useAtomValue(articleAtom);
 
   return (
-    <div>
-      {article.markdown && (
-        <Markdown params={{ path: ['/'], project: '' }}>
-          {article.markdown}
-        </Markdown>
+    <>
+      <BreadCrumb paths={['Home', 'Profile', article?.name]} />
+
+      <hr className="w-full h-5" />
+
+      {article && (
+        <Article article={article} commit={commit}>
+          {markdown}
+        </Article>
       )}
-    </div>
+    </>
   );
 };
 

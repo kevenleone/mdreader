@@ -7,6 +7,8 @@ import { File, Folder } from 'lucide-react';
 import { githubUserAtom } from '../../store/github.user.atom';
 import { foldersAtom } from '../../store/folder.atom';
 import { FeaturedArticle } from '../../components/cards/FeatureArticle';
+import { ArticlePanel } from '../../components/panels/ArticlePanel';
+import { FolderPanel } from '../../components/panels/FolderPanel';
 
 const colors = [
   'from-[#D8B4FE] to-[#818CF8]',
@@ -14,50 +16,68 @@ const colors = [
   'from-[#6EE7B7] via-[#3B82F6] to-[#9333EA]',
 ];
 
-const MyProfile = () => {
-  const { rows: articles } = useAtomValue(articlesAtom);
-  const { rows: folders } = useAtomValue(foldersAtom);
+export const ProfileCard = () => {
   const githubUser = useAtomValue(githubUserAtom);
 
   return (
-    <div className="flex flex-col justify-center items-start border-gray-200 dark:border-gray-700 mx-auto">
-      <Profile
-        bio={githubUser.bio}
-        company={githubUser.company}
-        name={githubUser.name}
-        photo={githubUser.avatar_url}
-      />
+    <Profile
+      bio={githubUser.bio}
+      company={githubUser.company}
+      name={githubUser.name}
+      photo={githubUser.avatar_url}
+    />
+  );
+};
 
+const MyProfile = () => {
+  const { rows: articles } = useAtomValue(articlesAtom);
+  const { rows: folders } = useAtomValue(foldersAtom);
+
+  return (
+    <div className="w-full">
       <List>
         <List.Heading>Featured Articles</List.Heading>
+
         <div className="flex gap-6 flex-col md:flex-row mb-4">
-          {articles.map((article, index) => (
-            <FeaturedArticle
-              key={index}
-              gradient={colors[index]}
-              path={`preview/${article.id}`}
-              title={article.name}
-              views={1000}
-            />
-          ))}
+          {articles
+            .filter((article) => article.featured)
+            .map((article, index) => (
+              <FeaturedArticle
+                key={index}
+                gradient={colors[index]}
+                path={`preview/${article.id}`}
+                title={article.name}
+                views={1000}
+              />
+            ))}
         </div>
       </List>
 
       <List>
-        <List.Heading>Articles</List.Heading>
+        <List.Heading>
+          <div className="flex justify-between">
+            Articles
+            <ArticlePanel />
+          </div>
+        </List.Heading>
         {articles.map((article, index) => (
           <List.Item
             key={index}
             title={article.name}
             Icon={File}
-            description={'Github'}
+            description={article.description}
             href={`preview/${article.id}`}
           />
         ))}
       </List>
 
       <List>
-        <List.Heading>Folders</List.Heading>
+        <List.Heading>
+          <div className="flex justify-between">
+            Folders
+            <FolderPanel />
+          </div>
+        </List.Heading>
         {folders.map((folder, index) => (
           <List.Item
             key={index}

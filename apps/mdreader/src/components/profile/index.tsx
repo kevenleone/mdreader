@@ -1,3 +1,10 @@
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from '@mdreader/ui/components/ui/avatar';
+import { getInitials } from '../../utils';
+
 type ProfileProps = {
   name: string;
   bio?: string;
@@ -24,15 +31,11 @@ const Profile: React.FC<ProfileProps> = ({
       </h2>
       <p className="text-gray-600 dark:text-gray-400 mb-8">{description}</p>
     </div>
-    <div className="w-[80px] sm:w-[176px] relative mb-8 sm:mb-0 mr-auto">
-      <img
-        alt="Keven Leone"
-        height={176}
-        width={176}
-        src={photo}
-        className="rounded-full"
-      />
-    </div>
+
+    <Avatar className="w-[80px] h-[80px] sm:w-[176px] sm:h-[176px]">
+      <AvatarImage src={photo} />
+      <AvatarFallback>{getInitials(name)}</AvatarFallback>
+    </Avatar>
   </div>
 );
 
