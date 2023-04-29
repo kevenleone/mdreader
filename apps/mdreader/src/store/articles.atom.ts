@@ -3,31 +3,53 @@ import { supabase } from '../services/supabase';
 import { sessionAtom } from '../hooks/useSession';
 import { userAtom } from './user.atom';
 import { atom } from 'jotai';
+import { getCommitDetails, getUserAndRepoByRawUri } from '../utils/gihub';
+import { GithubCommit } from '../types';
 
 export const articleSlugAtom = atom<string | null>(null);
 
 export const articleAtom = atomWithCache(async (get) => {
   const articleSlug = get(articleSlugAtom);
-  let markdown;
+
+  if (!articleSlug) {
+    return {};
+  }
+
+  let githubDetails = {
+    markdown: '',
+    commit: {},
+  };
 
   const { data } = await supabase
     .from('Articles')
     .select('*')
     .filter('id', 'eq', articleSlug);
 
-  if (data?.length) {
-    const response = await fetch(data[0].fileUrl);
+  const [article] = data || [];
 
-    markdown = await response.text();
+  if (article) {
+    const { fileUrl } = article;
+    const githubUserRepo = getUserAndRepoByRawUri(fileUrl);
+
+    const [response, commitDetails] = await Promise.all([
+      fetch(fileUrl),
+      getCommitDetails(githubUserRepo),
+    ]);
+
+    githubDetails.commit = commitDetails[0];
+    githubDetails.markdown = await response.text();
   }
 
   return {
-    markdown,
-    article: data,
+    markdown: githubDetails.markdown,
+    commit: githubDetails.commit as GithubCommit,
+    article,
   };
 });
 
-export const articlesAtom = atomWithCache(async (get) => {
+export const forceRefreshAtom = atom(0);
+
+export const articlesAtom = atom(async (get) => {
   const userName = get(userAtom);
 
   let userId = '';
@@ -49,10 +71,18 @@ export const articlesAtom = atomWithCache(async (get) => {
     }
   }
 
-  const { data: rows, error } = await supabase
-    .from('Articles')
-    .select('*')
-    .filter('userId', 'eq', userId);
+  let rows = [];
+  let error;
+
+  if (userId) {
+    const { data, error: articleError } = await supabase
+      .from('Articles')
+      .select('*')
+      .filter('userId', 'eq', userId);
+
+    rows = data as any[];
+    error = articleError;
+  }
 
   return {
     rows: (rows as any[]) ?? [],
