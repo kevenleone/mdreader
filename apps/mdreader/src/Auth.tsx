@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { supabase } from './services/supabase';
+import { Button } from '@mdreader/ui/components/ui/button';
 
 const Auth = () => {
   useEffect(() => {
@@ -32,10 +33,9 @@ const Auth = () => {
   }
 
   return (
-    <div>
-      Test
-      <button onClick={signInWithGitHub}>Sign In Github</button>
-      <button onClick={logout}>Logout</button>
+    <div className="flex gap-3">
+      <Button onClick={signInWithGitHub}>Sign In Github</Button>
+      <Button onClick={logout}>Logout</Button>
     </div>
   );
 };
