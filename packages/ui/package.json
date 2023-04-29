@@ -20,6 +20,7 @@
     "@radix-ui/react-alert-dialog": "^1.0.3",
     "@radix-ui/react-avatar": "^1.0.2",
     "@radix-ui/react-dialog": "^1.0.3",
+    "@radix-ui/react-label": "^2.0.1",
     "class-variance-authority": "^0.5.2",
     "clsx": "^1.2.1",
     "lucide-react": "^0.171.0",
