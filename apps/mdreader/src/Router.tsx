@@ -14,14 +14,11 @@ const MDReaderRouter = () => (
       <Route element={<Layout />} path="/">
         <Route element={<Home />} index />
         <Route element={<App />} path="/app" />
-        <Route element={<ProfileOutlet />} path="/profile">
+        <Route element={<ProfileOutlet />} path="/profile/:username?">
           <Route element={<Profile />} index />
-          <Route element={<ProfileOutlet />} path=":username">
-            <Route element={<Profile />} index />
 
-            <Route element={<PreviewOutlet />} path="preview/:id">
-              <Route element={<Preview />} index />
-            </Route>
+          <Route element={<PreviewOutlet />} path="preview/:id">
+            <Route element={<Preview />} index />
           </Route>
         </Route>
       </Route>

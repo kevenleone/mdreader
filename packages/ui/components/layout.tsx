@@ -1,12 +1,12 @@
 import { TailwindIndicator } from './tailwind-indicator';
 import { SiteHeader, SiteHeaderProps } from './site-header';
 
-interface LayoutProps {
+type LayoutProps = {
   children: React.ReactNode;
   siteHeaderProps: SiteHeaderProps;
-}
+};
 
-export function Layout({ children, siteHeaderProps }: LayoutProps) {
+const Layout: React.FC<LayoutProps> = ({ children, siteHeaderProps }) => {
   return (
     <main>
       <div className="relative flex min-h-screen flex-col">
@@ -16,4 +16,6 @@ export function Layout({ children, siteHeaderProps }: LayoutProps) {
       <TailwindIndicator />
     </main>
   );
-}
+};
+
+export { Layout };

@@ -2,11 +2,11 @@ import { Icons } from './icons';
 import { MainNav } from './main-nav';
 import { ThemeToggle, ThemeToggleProps } from './theme-toggle';
 import { buttonVariants } from './ui/button';
+import { UserNav, UserNavProps } from './user-nav';
 
 export const siteConfig = {
   name: 'MD Reader',
-  description:
-    'Beautifully designed components built with Radix UI and Tailwind CSS.',
+  description: '...',
   mainNav: [
     {
       title: 'Home',
@@ -22,15 +22,15 @@ export const siteConfig = {
     },
   ],
   links: {
-    twitter: 'https://twitter.com/shadcn',
-    github: 'https://github.com/shadcn/ui',
-    docs: 'https://ui.shadcn.com',
+    github: 'https://github.com/kevenleone/md-reader-v2',
   },
 };
 
 export type SiteHeaderProps = {
   Link: any;
-} & ThemeToggleProps;
+  themeProps: ThemeToggleProps;
+  userNavProps?: UserNavProps;
+};
 
 export function SiteHeader(props: SiteHeaderProps) {
   return (
@@ -50,18 +50,10 @@ export function SiteHeader(props: SiteHeaderProps) {
                 <span className="sr-only">GitHub</span>
               </div>
             </a>
-            <a href={siteConfig.links.twitter} target="_blank" rel="noreferrer">
-              <div
-                className={buttonVariants({
-                  size: 'sm',
-                  variant: 'ghost',
-                })}
-              >
-                <Icons.twitter className="h-5 w-5 fill-current" />
-                <span className="sr-only">Twitter</span>
-              </div>
-            </a>
-            <ThemeToggle {...props} />
+
+            <ThemeToggle {...props.themeProps} />
+
+            {props.userNavProps && <UserNav {...props.userNavProps} />}
           </nav>
         </div>
       </div>
