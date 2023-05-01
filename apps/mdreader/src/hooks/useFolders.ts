@@ -1,34 +1,50 @@
 import { useAtomValue } from 'jotai';
-import { useEffect, useState } from 'react';
+import { useOutletContext } from 'react-router-dom';
+import useSWR from 'swr';
+
 import { supabase } from '../services/supabase';
 import { userIdAtom } from '../store/folder.atom';
-import { useOutletContext } from 'react-router-dom';
 
 type OutletContext = {
   folderId: number | null;
 };
 
-const useFolders = () => {
-  const { folderId: parentFolderId } = useOutletContext<OutletContext>();
-  const userId = useAtomValue(userIdAtom);
-
-  const [folders, setFolders] = useState<any[]>([]);
-
-  useEffect(() => {
-    (async () => {
-      const { data } = await supabase
-        .from('Folders')
-        .select('*')
-        .filter('user_id', 'eq', userId)
-        .filter('folder_id', parentFolderId ? 'eq' : 'is', parentFolderId)
-        .order('name', { ascending: true });
-
-      setFolders((data as any[]) ?? []);
-    })();
-  }, [parentFolderId, userId]);
+const getFolders = async ({
+  folderId,
+  userId,
+}: {
+  folderId: number | null;
+  userId: string;
+}) => {
+  const { data, error } = await supabase
+    .from('Folders')
+    .select('*')
+    .filter('folder_id', folderId ? 'eq' : 'is', folderId)
+    .filter('user_id', 'eq', userId)
+    .order('name', { ascending: true });
 
   return {
-    folders,
+    data,
+    error,
+  };
+};
+
+const useFolders = () => {
+  const userId = useAtomValue(userIdAtom);
+  const { folderId } = useOutletContext<OutletContext>();
+
+  const { data, ...swr } = useSWR(
+    {
+      key: 'folder',
+      folderId,
+      userId,
+    },
+    getFolders
+  );
+
+  return {
+    folders: data?.data ?? [],
+    ...swr,
   };
 };
 

@@ -31,9 +31,11 @@ export const ProfileCard = () => {
 };
 
 const MyProfile = () => {
-  const { folders } = useFolders();
-  const { articles } = useArticles();
+  const { articles, ...articlesProps } = useArticles();
+  const { folders, ...folderProps } = useFolders();
   const removeArticle = useSetAtom(removeArticleAtom);
+
+  const isContentLoading = articlesProps.isLoading || folderProps.isLoading;
 
   const folderAndArticleItems = useMemo(() => {
     const _articles = articles.map((article) => ({
@@ -90,16 +92,19 @@ const MyProfile = () => {
           description=""
           href=""
         />
-        {folderAndArticleItems.map((content, index) => (
-          <List.Item
-            actions={[
-              { name: 'Edit', onClick: () => alert('Test') },
-              { name: 'Remove', onClick: () => removeArticle(content.id) },
-            ]}
-            key={index}
-            {...content}
-          />
-        ))}
+
+        {isContentLoading
+          ? 'Loading...'
+          : folderAndArticleItems.map((content, index) => (
+              <List.Item
+                actions={[
+                  { name: 'Edit', onClick: () => alert('Test') },
+                  { name: 'Remove', onClick: () => removeArticle(content.id) },
+                ]}
+                key={index}
+                {...content}
+              />
+            ))}
       </List>
     </div>
   );
