@@ -13,7 +13,7 @@ type ArticleProps = {
   commit: GithubCommit;
 };
 
-const ViewCounter = () => <>10</>;
+const ViewCounter = () => <>10 views</>;
 
 const Article: React.FC<ArticleProps> = ({ article, children, commit }) => {
   if (!article) {

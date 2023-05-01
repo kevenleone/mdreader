@@ -1,5 +1,11 @@
-export function readingTime(_text: string) {
-  return '5 min read';
+const wordsPerMinute = 200;
+
+export function readingTime(text: string) {
+  const words = text.trim().split(/\s+/).length;
+
+  const readingTime = Math.ceil(words / wordsPerMinute);
+
+  return `${readingTime} min(s)`;
 }
 
 export function getInitials(text: string = '') {
