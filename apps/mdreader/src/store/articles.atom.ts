@@ -1,7 +1,5 @@
 import { atomWithCache } from 'jotai-cache';
 import { supabase } from '../services/supabase';
-import { sessionAtom } from '../hooks/useSession';
-import { userAtom } from './user.atom';
 import { atom } from 'jotai';
 import { getCommitDetails, getUserAndRepoByRawUri } from '../utils/gihub';
 import { GithubCommit } from '../types';
@@ -49,43 +47,11 @@ export const articleAtom = atomWithCache(async (get) => {
 
 export const forceRefreshAtom = atom(0);
 
-export const articlesAtom = atom(async (get) => {
-  const userName = get(userAtom);
+export const removeArticleAtom = atom(
+  () => '',
+  async (_get, set, articleId: number) => {
+    await supabase.from('Articles').delete().eq('id', articleId);
 
-  let userId = '';
-
-  if (userName) {
-    const { data } = await supabase
-      .from('GithubProfile')
-      .select('*')
-      .filter('login', 'eq', userName);
-
-    if (data?.length) {
-      userId = data[0].id;
-    }
-  } else {
-    const mySession = await get(sessionAtom);
-
-    if (mySession.data.session?.user.id) {
-      userId = mySession.data.session?.user.id;
-    }
+    set(forceRefreshAtom, new Date().getTime());
   }
-
-  let rows = [];
-  let error;
-
-  if (userId) {
-    const { data, error: articleError } = await supabase
-      .from('Articles')
-      .select('*')
-      .filter('userId', 'eq', userId);
-
-    rows = data as any[];
-    error = articleError;
-  }
-
-  return {
-    rows: (rows as any[]) ?? [],
-    error,
-  };
-});
+);
