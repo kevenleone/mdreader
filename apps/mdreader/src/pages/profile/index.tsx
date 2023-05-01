@@ -1,14 +1,15 @@
-import { useAtomValue } from 'jotai';
+import { useMemo } from 'react';
+import { File, Folder } from 'lucide-react';
+import { useAtomValue, useSetAtom } from 'jotai';
 
+import { ArticlePanel } from '../../components/panels/ArticlePanel';
+import { removeArticleAtom } from '../../store/articles.atom';
+import { FeaturedArticle } from '../../components/cards/FeatureArticle';
+import { githubUserAtom } from '../../store/github.user.atom';
 import { List } from '../../components/list';
 import { Profile } from '../../components/profile';
-import { articlesAtom } from '../../store/articles.atom';
-import { File, Folder } from 'lucide-react';
-import { githubUserAtom } from '../../store/github.user.atom';
-import { foldersAtom } from '../../store/folder.atom';
-import { FeaturedArticle } from '../../components/cards/FeatureArticle';
-import { ArticlePanel } from '../../components/panels/ArticlePanel';
-import { FolderPanel } from '../../components/panels/FolderPanel';
+import { useFolders } from '../../hooks/useFolders';
+import { useArticles } from '../../hooks/useArticles';
 
 const colors = [
   'from-[#D8B4FE] to-[#818CF8]',
@@ -30,18 +31,39 @@ export const ProfileCard = () => {
 };
 
 const MyProfile = () => {
-  const { rows: articles } = useAtomValue(articlesAtom);
-  const { rows: folders } = useAtomValue(foldersAtom);
+  const { folders } = useFolders();
+  const { articles } = useArticles();
+  const removeArticle = useSetAtom(removeArticleAtom);
+
+  const folderAndArticleItems = useMemo(() => {
+    const _articles = articles.map((article) => ({
+      ...article,
+      Icon: File,
+      href: `preview/${article.id}`,
+    }));
+
+    const _folders = folders.map((folder) => ({
+      ...folder,
+      Icon: Folder,
+      href: `?folderId=${folder.id}`,
+    }));
+
+    return [..._folders, ..._articles];
+  }, [articles, folders]);
+
+  const featuredArticles = useMemo(
+    () => articles.filter((article) => article.featured),
+    [articles]
+  );
 
   return (
     <div className="w-full">
-      <List>
-        <List.Heading>Featured Articles</List.Heading>
+      {!!featuredArticles.length && (
+        <List>
+          <List.Heading>Featured Articles</List.Heading>
 
-        <div className="flex gap-6 flex-col md:flex-row mb-4">
-          {articles
-            .filter((article) => article.featured)
-            .map((article, index) => (
+          <div className="flex gap-6 flex-col md:flex-row mb-4">
+            {featuredArticles.map((article, index) => (
               <FeaturedArticle
                 key={index}
                 gradient={colors[index]}
@@ -50,41 +72,32 @@ const MyProfile = () => {
                 views={1000}
               />
             ))}
-        </div>
-      </List>
+          </div>
+        </List>
+      )}
 
       <List>
         <List.Heading>
           <div className="flex justify-between">
-            Articles
+            Content
             <ArticlePanel />
           </div>
         </List.Heading>
-        {articles.map((article, index) => (
+        <List.Item
+          Icon={Folder}
+          name=".."
+          actions={[]}
+          description=""
+          href=""
+        />
+        {folderAndArticleItems.map((content, index) => (
           <List.Item
+            actions={[
+              { name: 'Edit', onClick: () => alert('Test') },
+              { name: 'Remove', onClick: () => removeArticle(content.id) },
+            ]}
             key={index}
-            title={article.name}
-            Icon={File}
-            description={article.description}
-            href={`preview/${article.id}`}
-          />
-        ))}
-      </List>
-
-      <List>
-        <List.Heading>
-          <div className="flex justify-between">
-            Folders
-            <FolderPanel />
-          </div>
-        </List.Heading>
-        {folders.map((folder, index) => (
-          <List.Item
-            key={index}
-            title={folder.name}
-            Icon={Folder}
-            description={folder.description}
-            href={`preview/${folder.id}/${folder.slug}`}
+            {...content}
           />
         ))}
       </List>

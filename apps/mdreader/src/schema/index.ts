@@ -35,7 +35,7 @@ export const folderSchema = z
     folderId: z.number().optional(),
     name: z
       .string()
-      .nonempty({ message: 'Article Name is required' })
+      .nonempty({ message: 'Folder Name is required' })
       .min(3)
       .max(100),
     slug: z.string().optional(),
