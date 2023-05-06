@@ -1,38 +1,41 @@
-import { Button } from '@mdreader/ui/components/ui/button';
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-} from '@mdreader/ui/components/ui/sheet';
+import { KeyedMutator } from "swr";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
-import { folderSchema } from '../../schema';
-import { zodResolver } from '@hookform/resolvers/zod';
-import Form from '../form';
-import { slugify } from '../../utils/slugify';
-import { supabase } from '../../services/supabase';
+import { Button } from "@mdreader/ui/components/ui/button";
+
+import { folderSchema } from "../../schema";
+import { folderService } from "../../services/folder";
+import { slugify } from "../../utils/slugify";
+import { supabase } from "../../services/supabase";
+import Form from "../form";
 
 type FolderForm = z.infer<typeof folderSchema>;
 
-type FolderPanelFormProps = {
+export type FolderPanelFormProps = {
+  mutateFolders: KeyedMutator<Awaited<ReturnType<typeof folderService.getAll>>>;
   onClose: () => void;
 };
 
-const FolderPanelForm: React.FC<FolderPanelFormProps> = ({ onClose }) => {
+export const FolderPanelForm: React.FC<FolderPanelFormProps> = ({
+  mutateFolders,
+  onClose,
+}) => {
   const folderForm = useForm<FolderForm>({
     resolver: zodResolver(folderSchema),
   });
 
   const onCreateFolder = async (folder: FolderForm) => {
-    const { error } = await supabase.from('Folders').insert([folder]);
+    const { error } = await supabase.from("Folders").insert([folder]);
 
     if (error) {
       return console.error(error);
     }
+    mutateFolders((prevFolders) => [
+      ...(prevFolders as any),
+      { ...folder, id: new Date().getTime() },
+    ]);
 
     onClose();
   };
@@ -43,7 +46,7 @@ const FolderPanelForm: React.FC<FolderPanelFormProps> = ({ onClose }) => {
     formState: { isSubmitting },
   } = folderForm;
 
-  const slug = slugify(watch('name') ?? '');
+  const slug = slugify(watch("name") ?? "");
 
   return (
     <Form
@@ -79,30 +82,3 @@ const FolderPanelForm: React.FC<FolderPanelFormProps> = ({ onClose }) => {
     </Form>
   );
 };
-
-const FolderPanel = () => {
-  const [open, setOpen] = useState(false);
-
-  return (
-    <>
-      <Button variant="secondary" onClick={() => setOpen(true)}>
-        Add
-      </Button>
-
-      {open && (
-        <Sheet open onOpenChange={setOpen}>
-          <SheetContent>
-            <SheetHeader>
-              <SheetTitle>Add Folder</SheetTitle>
-              <SheetDescription>...</SheetDescription>
-            </SheetHeader>
-
-            <FolderPanelForm onClose={() => setOpen(false)} />
-          </SheetContent>
-        </Sheet>
-      )}
-    </>
-  );
-};
-
-export { FolderPanel };

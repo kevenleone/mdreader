@@ -1,38 +1,43 @@
-import { Button } from '@mdreader/ui/components/ui/button';
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-} from '@mdreader/ui/components/ui/sheet';
+import { KeyedMutator } from "swr";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
-import { articleSchema } from '../../schema';
-import { zodResolver } from '@hookform/resolvers/zod';
-import Form from '../../components/form';
-import { slugify } from '../../utils/slugify';
-import { supabase } from '../../services/supabase';
+import { Button } from "@mdreader/ui/components/ui/button";
+
+import { articleSchema } from "../../schema";
+import { articleService } from "../../services/article";
+import { slugify } from "../../utils/slugify";
+import Form from "../../components/form";
 
 type ArticleForm = z.infer<typeof articleSchema>;
 
-type ArticlePanelFormProps = {
+export type ArticlePanelFormProps = {
+  mutateArticles: KeyedMutator<
+    Awaited<ReturnType<typeof articleService.getAll>>
+  >;
   onClose: () => void;
 };
 
-const ArticlePanelForm: React.FC<ArticlePanelFormProps> = ({ onClose }) => {
+export const ArticlePanelForm: React.FC<ArticlePanelFormProps> = ({
+  mutateArticles,
+  onClose,
+}) => {
   const articleForm = useForm<ArticleForm>({
     resolver: zodResolver(articleSchema),
   });
 
   const onCreateArticle = async (article: ArticleForm) => {
-    const { error } = await supabase.from('Articles').insert([article]);
+    const { error } = await articleService.store(article);
 
     if (error) {
       return console.error(error);
     }
+
+    mutateArticles((prevArticles) => [
+      ...(prevArticles as any),
+      { ...article, id: new Date().getTime() },
+    ]);
 
     onClose();
   };
@@ -43,7 +48,7 @@ const ArticlePanelForm: React.FC<ArticlePanelFormProps> = ({ onClose }) => {
     formState: { isSubmitting },
   } = articleForm;
 
-  const slug = slugify(watch('name') ?? '');
+  const slug = slugify(watch("name") ?? "");
 
   return (
     <Form
@@ -91,30 +96,3 @@ const ArticlePanelForm: React.FC<ArticlePanelFormProps> = ({ onClose }) => {
     </Form>
   );
 };
-
-const ArticlePanel = () => {
-  const [open, setOpen] = useState(false);
-
-  return (
-    <>
-      <Button variant="secondary" onClick={() => setOpen(true)}>
-        Add
-      </Button>
-
-      {open && (
-        <Sheet open onOpenChange={setOpen}>
-          <SheetContent>
-            <SheetHeader>
-              <SheetTitle>Add Article</SheetTitle>
-              <SheetDescription>...</SheetDescription>
-            </SheetHeader>
-
-            <ArticlePanelForm onClose={() => setOpen(false)} />
-          </SheetContent>
-        </Sheet>
-      )}
-    </>
-  );
-};
-
-export { ArticlePanel };
