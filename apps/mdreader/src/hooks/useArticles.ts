@@ -1,51 +1,19 @@
-import { useAtomValue } from 'jotai';
-import { useOutletContext } from 'react-router-dom';
-import useSWR from 'swr';
+import useSWR from "swr";
 
-import { supabase } from '../services/supabase';
-import { userIdAtom } from '../store/folder.atom';
+import { articleService } from "../services/article";
 
-type OutletContext = {
+type Props = {
+  userId: string | null;
   folderId: number | null;
 };
 
-const getArticles = async ({
-  folderId,
-  userId,
-}: {
-  folderId: number | string;
-  userId: string;
-}) => {
-  const { data, error } = await supabase
-    .from('Articles')
-    .select('*')
-    .filter('folder_id', folderId ? 'eq' : 'is', folderId)
-    .filter('user_id', 'eq', userId)
-    .order('name', { ascending: true });
-
-  return {
-    data,
-    error,
-  };
-};
-
-const useArticles = () => {
-  const userId = useAtomValue(userIdAtom);
-  const { folderId } = useOutletContext<OutletContext>();
-
-  const { data, ...swr } = useSWR(
+const useArticles = (props: Props) =>
+  useSWR(
     {
-      key: 'articles',
-      userId,
-      folderId,
+      ...props,
+      key: "articles",
     },
-    getArticles
+    articleService.getAll
   );
-
-  return {
-    articles: data?.data ?? ([] as any[]),
-    ...swr,
-  };
-};
 
 export { useArticles };
