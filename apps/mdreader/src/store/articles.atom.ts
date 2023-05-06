@@ -44,14 +44,3 @@ export const articleAtom = atomWithCache(async (get) => {
     article,
   };
 });
-
-export const forceRefreshAtom = atom(0);
-
-export const removeArticleAtom = atom(
-  () => '',
-  async (_get, set, articleId: number) => {
-    await supabase.from('Articles').delete().eq('id', articleId);
-
-    set(forceRefreshAtom, new Date().getTime());
-  }
-);
