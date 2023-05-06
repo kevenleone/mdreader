@@ -1,57 +1,55 @@
-import { useMemo } from 'react';
-import { File, Folder } from 'lucide-react';
-import { useAtomValue, useSetAtom } from 'jotai';
+import { Folder } from "lucide-react";
+import { useAtomValue } from "jotai";
+import { useMemo } from "react";
+import { useOutletContext } from "react-router-dom";
 
-import { ArticlePanel } from '../../components/panels/ArticlePanel';
-import { removeArticleAtom } from '../../store/articles.atom';
-import { FeaturedArticle } from '../../components/cards/FeatureArticle';
-import { githubUserAtom } from '../../store/github.user.atom';
-import { List } from '../../components/list';
-import { Profile } from '../../components/profile';
-import { useFolders } from '../../hooks/useFolders';
-import { useArticles } from '../../hooks/useArticles';
+import { FeaturedArticle } from "../../components/cards/FeatureArticle";
+import { List } from "../../components/list";
+import { Panel } from "../../components/panels";
+import { useArticles } from "../../hooks/useArticles";
+import { useFolders } from "../../hooks/useFolders";
+import { userIdAtom } from "../../store/folder.atom";
+import useFolderAndArticleActions from "./useFolderAndArticleActions";
 
 const colors = [
-  'from-[#D8B4FE] to-[#818CF8]',
-  'from-[#FDE68A] via-[#FCA5A5] to-[#FECACA]',
-  'from-[#6EE7B7] via-[#3B82F6] to-[#9333EA]',
+  "from-[#D8B4FE] to-[#818CF8]",
+  "from-[#FDE68A] via-[#FCA5A5] to-[#FECACA]",
+  "from-[#6EE7B7] via-[#3B82F6] to-[#9333EA]",
 ];
 
-export const ProfileCard = () => {
-  const githubUser = useAtomValue(githubUserAtom);
-
-  return (
-    <Profile
-      bio={githubUser.bio}
-      company={githubUser.company}
-      name={githubUser.name}
-      photo={githubUser.avatar_url}
-    />
-  );
+type OutletContext = {
+  folderId: number | null;
 };
 
 const MyProfile = () => {
-  const { articles, ...articlesProps } = useArticles();
-  const { folders, ...folderProps } = useFolders();
-  const removeArticle = useSetAtom(removeArticleAtom);
+  const userId = useAtomValue(userIdAtom);
+  const { folderId } = useOutletContext<OutletContext>();
+
+  const contentProps = {
+    userId,
+    folderId,
+  };
+
+  const {
+    data: articles = [],
+    mutate: mutateArticles,
+    ...articlesProps
+  } = useArticles(contentProps);
+
+  const {
+    data: folders = [],
+    mutate: mutateFolders,
+    ...folderProps
+  } = useFolders(contentProps);
 
   const isContentLoading = articlesProps.isLoading || folderProps.isLoading;
 
-  const folderAndArticleItems = useMemo(() => {
-    const _articles = articles.map((article) => ({
-      ...article,
-      Icon: File,
-      href: `preview/${article.id}`,
-    }));
-
-    const _folders = folders.map((folder) => ({
-      ...folder,
-      Icon: Folder,
-      href: `?folderId=${folder.id}`,
-    }));
-
-    return [..._folders, ..._articles];
-  }, [articles, folders]);
+  const folderAndArticleItems = useFolderAndArticleActions({
+    articles,
+    folders,
+    mutateArticles,
+    mutateFolders,
+  });
 
   const featuredArticles = useMemo(
     () => articles.filter((article) => article.featured),
@@ -82,9 +80,15 @@ const MyProfile = () => {
         <List.Heading>
           <div className="flex justify-between">
             Content
-            <ArticlePanel />
+            <div className="flex gap-3">
+              <Panel
+                mutateArticles={mutateArticles}
+                mutateFolders={mutateFolders}
+              />
+            </div>
           </div>
         </List.Heading>
+
         <List.Item
           Icon={Folder}
           name=".."
@@ -94,16 +98,9 @@ const MyProfile = () => {
         />
 
         {isContentLoading
-          ? 'Loading...'
+          ? "Loading..."
           : folderAndArticleItems.map((content, index) => (
-              <List.Item
-                actions={[
-                  { name: 'Edit', onClick: () => alert('Test') },
-                  { name: 'Remove', onClick: () => removeArticle(content.id) },
-                ]}
-                key={index}
-                {...content}
-              />
+              <List.Item key={index} {...content} />
             ))}
       </List>
     </div>
