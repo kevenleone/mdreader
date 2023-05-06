@@ -14,7 +14,7 @@
     "eslint-config-custom": "*",
     "react": "^18.0.2",
     "tsconfig": "*",
-    "typescript": "^4.5.2"
+    "typescript": "^5.0.2"
   },
   "dependencies": {
     "@radix-ui/react-alert-dialog": "^1.0.3",
