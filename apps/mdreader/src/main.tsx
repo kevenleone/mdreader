@@ -1,6 +1,7 @@
 import { SWRConfig } from 'swr';
 import ReactDOM from 'react-dom/client';
 
+import { Toaster } from '@mdreader/ui/components/ui/toaster';
 import MDReaderRouter from './Router.tsx';
 
 import './index.css';
@@ -26,6 +27,7 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
       revalidateOnFocus: false,
     }}
   >
+    <Toaster />
     <MDReaderRouter />
   </SWRConfig>
 );
