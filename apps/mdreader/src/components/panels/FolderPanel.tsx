@@ -1,15 +1,16 @@
-import { KeyedMutator } from "swr";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { KeyedMutator } from 'swr';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
 
-import { Button } from "@mdreader/ui/components/ui/button";
+import { Button } from '@mdreader/ui/components/ui/button';
+import { useToast } from '@mdreader/ui/components/ui/use-toast';
 
-import { folderSchema } from "../../schema";
-import { folderService } from "../../services/folder";
-import { slugify } from "../../utils/slugify";
-import { supabase } from "../../services/supabase";
-import Form from "../form";
+import { folderSchema } from '../../schema';
+import { folderService } from '../../services/folder';
+import { slugify } from '../../utils/slugify';
+import { supabase } from '../../services/supabase';
+import Form from '../form';
 
 type FolderForm = z.infer<typeof folderSchema>;
 
@@ -22,20 +23,33 @@ export const FolderPanelForm: React.FC<FolderPanelFormProps> = ({
   mutateFolders,
   onClose,
 }) => {
+  const { toast } = useToast();
+
   const folderForm = useForm<FolderForm>({
     resolver: zodResolver(folderSchema),
   });
 
   const onCreateFolder = async (folder: FolderForm) => {
-    const { error } = await supabase.from("Folders").insert([folder]);
+    const { error } = await supabase.from('Folders').insert([folder]);
 
     if (error) {
+      toast({
+        title: 'Uh oh! Something went wrong.',
+        description: 'There was a problem with your request.',
+      });
+
       return console.error(error);
     }
+
     mutateFolders((prevFolders) => [
       ...(prevFolders as any),
       { ...folder, id: new Date().getTime() },
     ]);
+
+    toast({
+      title: 'Oh yeah!',
+      description: 'A Folder was added to your list :)',
+    });
 
     onClose();
   };
@@ -46,7 +60,7 @@ export const FolderPanelForm: React.FC<FolderPanelFormProps> = ({
     formState: { isSubmitting },
   } = folderForm;
 
-  const slug = slugify(watch("name") ?? "");
+  const slug = slugify(watch('name') ?? '');
 
   return (
     <Form

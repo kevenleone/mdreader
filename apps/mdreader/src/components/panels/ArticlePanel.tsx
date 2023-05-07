@@ -1,14 +1,15 @@
-import { KeyedMutator } from "swr";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { KeyedMutator } from 'swr';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
 
-import { Button } from "@mdreader/ui/components/ui/button";
+import { Button } from '@mdreader/ui/components/ui/button';
+import { useToast } from '@mdreader/ui/components/ui/use-toast';
 
-import { articleSchema } from "../../schema";
-import { articleService } from "../../services/article";
-import { slugify } from "../../utils/slugify";
-import Form from "../../components/form";
+import { articleSchema } from '../../schema';
+import { articleService } from '../../services/article';
+import { slugify } from '../../utils/slugify';
+import Form from '../../components/form';
 
 type ArticleForm = z.infer<typeof articleSchema>;
 
@@ -23,6 +24,8 @@ export const ArticlePanelForm: React.FC<ArticlePanelFormProps> = ({
   mutateArticles,
   onClose,
 }) => {
+  const { toast } = useToast();
+
   const articleForm = useForm<ArticleForm>({
     resolver: zodResolver(articleSchema),
   });
@@ -31,6 +34,11 @@ export const ArticlePanelForm: React.FC<ArticlePanelFormProps> = ({
     const { error } = await articleService.store(article);
 
     if (error) {
+      toast({
+        title: 'Uh oh! Something went wrong.',
+        description: 'There was a problem with your request.',
+      });
+
       return console.error(error);
     }
 
@@ -38,6 +46,11 @@ export const ArticlePanelForm: React.FC<ArticlePanelFormProps> = ({
       ...(prevArticles as any),
       { ...article, id: new Date().getTime() },
     ]);
+
+    toast({
+      title: 'Oh Yeah!',
+      description: 'An Article was added to your list :)',
+    });
 
     onClose();
   };
@@ -48,7 +61,7 @@ export const ArticlePanelForm: React.FC<ArticlePanelFormProps> = ({
     formState: { isSubmitting },
   } = articleForm;
 
-  const slug = slugify(watch("name") ?? "");
+  const slug = slugify(watch('name') ?? '');
 
   return (
     <Form
