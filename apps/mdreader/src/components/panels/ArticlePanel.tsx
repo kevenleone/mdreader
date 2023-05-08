@@ -35,8 +35,9 @@ export const ArticlePanelForm: React.FC<ArticlePanelFormProps> = ({
 
     if (error) {
       toast({
-        title: 'Uh oh! Something went wrong.',
         description: 'There was a problem with your request.',
+        title: 'Uh oh! Something went wrong.',
+        variant: 'destructive',
       });
 
       return console.error(error);

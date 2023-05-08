@@ -1,20 +1,21 @@
-import { Folder } from "lucide-react";
-import { useAtomValue } from "jotai";
-import { useMemo } from "react";
-import { useOutletContext } from "react-router-dom";
+import { Folder } from 'lucide-react';
+import { useAtomValue } from 'jotai';
+import { useMemo } from 'react';
+import { useOutletContext } from 'react-router-dom';
 
-import { FeaturedArticle } from "../../components/cards/FeatureArticle";
-import { List } from "../../components/list";
-import { Panel } from "../../components/panels";
-import { useArticles } from "../../hooks/useArticles";
-import { useFolders } from "../../hooks/useFolders";
-import { userIdAtom } from "../../store/folder.atom";
-import useFolderAndArticleActions from "./useFolderAndArticleActions";
+import { FeaturedArticle } from '../../components/cards/FeatureArticle';
+import { List } from '../../components/list';
+import { Panel } from '../../components/panels';
+import { useArticles } from '../../hooks/useArticles';
+import { useFolders } from '../../hooks/useFolders';
+import { userIdAtom } from '../../store/folder.atom';
+import useFolderAndArticleActions from './useFolderAndArticleActions';
+import { ConfirmDialog } from '../../components/confirm-dialog/ConfirmDialog';
 
 const colors = [
-  "from-[#D8B4FE] to-[#818CF8]",
-  "from-[#FDE68A] via-[#FCA5A5] to-[#FECACA]",
-  "from-[#6EE7B7] via-[#3B82F6] to-[#9333EA]",
+  'from-[#D8B4FE] to-[#818CF8]',
+  'from-[#FDE68A] via-[#FCA5A5] to-[#FECACA]',
+  'from-[#6EE7B7] via-[#3B82F6] to-[#9333EA]',
 ];
 
 type OutletContext = {
@@ -44,7 +45,7 @@ const MyProfile = () => {
 
   const isContentLoading = articlesProps.isLoading || folderProps.isLoading;
 
-  const folderAndArticleItems = useFolderAndArticleActions({
+  const { confirmDialogProps, items } = useFolderAndArticleActions({
     articles,
     folders,
     mutateArticles,
@@ -98,11 +99,13 @@ const MyProfile = () => {
         />
 
         {isContentLoading
-          ? "Loading..."
-          : folderAndArticleItems.map((content, index) => (
+          ? 'Loading...'
+          : items.map((content, index) => (
               <List.Item key={index} {...content} />
             ))}
       </List>
+
+      <ConfirmDialog {...confirmDialogProps} />
     </div>
   );
 };
