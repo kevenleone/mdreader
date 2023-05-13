@@ -1,60 +1,31 @@
-import { KeyedMutator } from 'swr';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import { Button } from '@mdreader/ui/components/ui/button';
-import { useToast } from '@mdreader/ui/components/ui/use-toast';
 
 import { articleSchema } from '../../schema';
-import { articleService } from '../../services/article';
 import { slugify } from '../../utils/slugify';
 import Form from '../../components/form';
+import { OnSaveArticleAndFolder } from '../../pages/profile/useFolderAndArticleActions';
 
 type ArticleForm = z.infer<typeof articleSchema>;
 
 export type ArticlePanelFormProps = {
-  mutateArticles: KeyedMutator<
-    Awaited<ReturnType<typeof articleService.getAll>>
-  >;
+  defaultValues: Partial<ArticleForm>;
   onClose: () => void;
+  onSave: OnSaveArticleAndFolder;
 };
 
 export const ArticlePanelForm: React.FC<ArticlePanelFormProps> = ({
-  mutateArticles,
+  defaultValues,
+  onSave,
   onClose,
 }) => {
-  const { toast } = useToast();
-
   const articleForm = useForm<ArticleForm>({
+    defaultValues,
     resolver: zodResolver(articleSchema),
   });
-
-  const onCreateArticle = async (article: ArticleForm) => {
-    const { error } = await articleService.store(article);
-
-    if (error) {
-      toast({
-        description: 'There was a problem with your request.',
-        title: 'Uh oh! Something went wrong.',
-        variant: 'destructive',
-      });
-
-      return console.error(error);
-    }
-
-    mutateArticles((prevArticles) => [
-      ...(prevArticles as any),
-      { ...article, id: new Date().getTime() },
-    ]);
-
-    toast({
-      title: 'Oh Yeah!',
-      description: 'An Article was added to your list :)',
-    });
-
-    onClose();
-  };
 
   const {
     handleSubmit,
@@ -67,7 +38,7 @@ export const ArticlePanelForm: React.FC<ArticlePanelFormProps> = ({
   return (
     <Form
       formProviderProps={articleForm}
-      onSubmit={handleSubmit(onCreateArticle)}
+      onSubmit={handleSubmit(onSave('article'))}
     >
       <Form.Field>
         <Form.Label htmlFor="name">Name</Form.Label>

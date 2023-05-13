@@ -1,59 +1,31 @@
-import { KeyedMutator } from 'swr';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import { Button } from '@mdreader/ui/components/ui/button';
-import { useToast } from '@mdreader/ui/components/ui/use-toast';
 
 import { folderSchema } from '../../schema';
-import { folderService } from '../../services/folder';
 import { slugify } from '../../utils/slugify';
-import { supabase } from '../../services/supabase';
 import Form from '../form';
+import { OnSaveArticleAndFolder } from '../../pages/profile/useFolderAndArticleActions';
 
 type FolderForm = z.infer<typeof folderSchema>;
 
 export type FolderPanelFormProps = {
-  mutateFolders: KeyedMutator<Awaited<ReturnType<typeof folderService.getAll>>>;
+  defaultValues: Partial<FolderForm>;
+  onSave: OnSaveArticleAndFolder;
   onClose: () => void;
 };
 
 export const FolderPanelForm: React.FC<FolderPanelFormProps> = ({
-  mutateFolders,
+  defaultValues,
+  onSave,
   onClose,
 }) => {
-  const { toast } = useToast();
-
   const folderForm = useForm<FolderForm>({
+    defaultValues,
     resolver: zodResolver(folderSchema),
   });
-
-  const onCreateFolder = async (folder: FolderForm) => {
-    const { error } = await supabase.from('Folders').insert([folder]);
-
-    if (error) {
-      toast({
-        description: 'There was a problem with your request.',
-        title: 'Uh oh! Something went wrong.',
-        variant: 'destructive',
-      });
-
-      return console.error(error);
-    }
-
-    mutateFolders((prevFolders) => [
-      ...(prevFolders as any),
-      { ...folder, id: new Date().getTime() },
-    ]);
-
-    toast({
-      title: 'Oh yeah!',
-      description: 'A Folder was added to your list :)',
-    });
-
-    onClose();
-  };
 
   const {
     handleSubmit,
@@ -66,7 +38,7 @@ export const FolderPanelForm: React.FC<FolderPanelFormProps> = ({
   return (
     <Form
       formProviderProps={folderForm}
-      onSubmit={handleSubmit(onCreateFolder)}
+      onSubmit={handleSubmit(onSave('folder'))}
     >
       <Form.Field>
         <Form.Label htmlFor="name">Name</Form.Label>
