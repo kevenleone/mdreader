@@ -1,7 +1,7 @@
 import { Icons } from './icons';
 import { MainNav } from './main-nav';
 import { ThemeToggle, ThemeToggleProps } from './theme-toggle';
-import { buttonVariants } from './ui/button';
+import { Button, buttonVariants } from './ui/button';
 import { UserNav, UserNavProps } from './user-nav';
 
 export const siteConfig = {
@@ -29,6 +29,7 @@ export const siteConfig = {
 export type SiteHeaderProps = {
   Link: any;
   themeProps: ThemeToggleProps;
+  onSignIn: () => void;
   userNavProps?: UserNavProps;
 };
 
@@ -53,7 +54,13 @@ export function SiteHeader(props: SiteHeaderProps) {
 
             <ThemeToggle {...props.themeProps} />
 
-            {props.userNavProps && <UserNav {...props.userNavProps} />}
+            {props.userNavProps ? (
+              <UserNav {...props.userNavProps} />
+            ) : (
+              <>
+                <Button onClick={props.onSignIn}>Sign In</Button>
+              </>
+            )}
           </nav>
         </div>
       </div>
