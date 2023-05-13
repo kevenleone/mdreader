@@ -45,7 +45,7 @@ const MyProfile = () => {
 
   const isContentLoading = articlesProps.isLoading || folderProps.isLoading;
 
-  const { confirmDialogProps, items } = useFolderAndArticleActions({
+  const { confirmDialogProps, panelProps, items } = useFolderAndArticleActions({
     articles,
     folders,
     mutateArticles,
@@ -82,10 +82,7 @@ const MyProfile = () => {
           <div className="flex justify-between">
             Content
             <div className="flex gap-3">
-              <Panel
-                mutateArticles={mutateArticles}
-                mutateFolders={mutateFolders}
-              />
+              <Panel {...panelProps} />
             </div>
           </div>
         </List.Heading>

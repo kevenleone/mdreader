@@ -5,6 +5,8 @@ import { useToast } from '@mdreader/ui/components/ui/use-toast';
 
 import { articleService } from '../../services/article';
 import { folderService } from '../../services/folder';
+import { z } from 'zod';
+import { articleSchema, folderSchema } from '../../schema';
 
 type Props = {
   articles: any[];
@@ -17,6 +19,9 @@ type ConfirmDialogState = {
   open: boolean;
   onConfirm: () => void;
 };
+
+type ArticleForm = z.infer<typeof articleSchema>;
+type FolderForm = z.infer<typeof folderSchema>;
 
 const getDescriptionMessage = (
   text: string
@@ -37,6 +42,68 @@ const useFolderAndArticleActions = ({
       onConfirm: () => undefined,
     });
 
+  const [panelProps, setPanelProps] = useState({ defaultValues: {} });
+
+  const setOpen = useCallback(
+    (open: boolean) => {
+      setPanelProps((prevState) => ({
+        ...prevState,
+        defaultValues: {},
+        defaultPanel: null,
+        open,
+      }));
+    },
+    [setPanelProps]
+  );
+
+  const onSave = useCallback(
+    (type: 'article' | 'folder') => {
+      const properties = {
+        mutate: type === 'article' ? mutateArticles : mutateFolders,
+        service: type === 'article' ? articleService : folderService,
+      };
+
+      return async (form: ArticleForm | FolderForm) => {
+        const { error, data } = await properties.service.store(form as any);
+
+        if (error) {
+          console.error(error);
+
+          return toast({
+            description: 'There was a problem with your request.',
+            title: 'Uh oh! Something went wrong.',
+            variant: 'destructive',
+          });
+        }
+
+        properties.mutate((prevRows: any[]) => {
+          if (form.id) {
+            return prevRows?.map((prevRow) => {
+              if (prevRow.id === form.id) {
+                return form;
+              }
+
+              return prevRow;
+            });
+          }
+
+          return [
+            ...(prevRows as any),
+            { ...form, id: data[0]?.id ?? new Date().getTime() },
+          ];
+        });
+
+        toast({
+          description: `"${form.name}" ${type} was saved to your list :)`,
+          title: 'Success',
+        });
+
+        setOpen(false);
+      };
+    },
+    [setOpen]
+  );
+
   const onDelete = useCallback((record: any, mutate: any) => {
     mutate((prevRecords: any[]) =>
       prevRecords
@@ -53,7 +120,13 @@ const useFolderAndArticleActions = ({
       actions: [
         {
           name: 'Edit',
-          onClick: () => alert('Test'),
+          onClick: () =>
+            setPanelProps((panelProps) => ({
+              ...panelProps,
+              defaultPanel: 'article',
+              defaultValues: article,
+              open: true,
+            })),
         },
         {
           name: 'Remove',
@@ -76,7 +149,16 @@ const useFolderAndArticleActions = ({
     const _folders = folders.map((folder) => ({
       ...folder,
       actions: [
-        { name: 'Edit', onClick: () => alert('Test') },
+        {
+          name: 'Edit',
+          onClick: () =>
+            setPanelProps((panelProps) => ({
+              ...panelProps,
+              defaultValues: folder,
+              defaultPanel: 'folder',
+              open: true,
+            })),
+        },
         {
           name: 'Remove',
           onClick: async () =>
@@ -96,14 +178,7 @@ const useFolderAndArticleActions = ({
     }));
 
     return [..._folders, ..._articles];
-  }, [
-    articles,
-    folders,
-    mutateArticles,
-    mutateFolders,
-    onDelete,
-    setConfirmDialogProps,
-  ]);
+  }, [articles, folders, onDelete, setConfirmDialogProps, setPanelProps]);
 
   return {
     confirmDialogProps: {
@@ -112,7 +187,16 @@ const useFolderAndArticleActions = ({
         setConfirmDialogProps((prevProps) => ({ ...prevProps, open: false })),
     },
     items,
+    panelProps: {
+      ...panelProps,
+      onSave,
+      setOpen,
+    },
   };
 };
+
+export type OnSaveArticleAndFolder = ReturnType<
+  typeof useFolderAndArticleActions
+>['panelProps']['onSave'];
 
 export default useFolderAndArticleActions;
