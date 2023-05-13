@@ -9,11 +9,11 @@ import '@mdreader/md/styles/md.css';
 import '@mdreader/ui/styles/ui.css';
 
 function localStorageProvider() {
-  const map = new Map(JSON.parse(localStorage.getItem('app-cache') || '[]'));
+  const map = new Map(JSON.parse(sessionStorage.getItem('app-cache') || '[]'));
 
   window.addEventListener('beforeunload', () => {
     const appCache = JSON.stringify(Array.from(map.entries()));
-    localStorage.setItem('app-cache', appCache);
+    sessionStorage.setItem('app-cache', appCache);
   });
 
   return map as any;

@@ -9,17 +9,20 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@mdreader/ui/components/ui/alert-dialog';
+import { ReactNode } from 'react';
 
 type ConfirmDialogProps = {
+  children?: ReactNode;
   description?: string;
-  onCancel: () => void;
-  onConfirm: () => void;
+  onCancel?: () => void;
+  onConfirm?: () => void;
   open?: boolean;
   title?: string;
   trigger?: React.ReactNode;
 };
 
 const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
+  children,
   description,
   onCancel,
   onConfirm,
@@ -35,9 +38,14 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
           <AlertDialogTitle>{title}</AlertDialogTitle>
           <AlertDialogDescription>{description}</AlertDialogDescription>
         </AlertDialogHeader>
+        {children}
         <AlertDialogFooter>
-          <AlertDialogCancel onClick={onCancel}>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={onConfirm}>Continue</AlertDialogAction>
+          {onCancel && (
+            <AlertDialogCancel onClick={onCancel}>Cancel</AlertDialogCancel>
+          )}
+          {onConfirm && (
+            <AlertDialogAction onClick={onConfirm}>Continue</AlertDialogAction>
+          )}
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

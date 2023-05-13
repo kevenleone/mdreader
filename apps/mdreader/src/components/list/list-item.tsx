@@ -1,13 +1,13 @@
-import { Fragment } from "react";
-import { Link } from "react-router-dom";
-import { LucideIcon } from "lucide-react";
+import { Fragment } from 'react';
+import { Link } from 'react-router-dom';
+import { LucideIcon } from 'lucide-react';
 
 import {
   ContextMenu,
   ContextMenuContent,
   ContextMenuItem,
   ContextMenuTrigger,
-} from "@mdreader/ui/components/ui/context-menu";
+} from '@mdreader/ui/components/ui/context-menu';
 
 export type ListItemProps = {
   actions?: {

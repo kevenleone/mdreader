@@ -1,9 +1,9 @@
-import { z } from "zod";
+import { z } from 'zod';
 
-import { articleSchema } from "../schema";
-import { supabase } from "./supabase";
-import { GithubCommit } from "../types";
-import { getUserAndRepoByRawUri, getCommitDetails } from "../utils/gihub";
+import { articleSchema } from '../schema';
+import { supabase } from './supabase';
+import { GithubCommit } from '../types';
+import { getUserAndRepoByRawUri, getCommitDetails } from '../utils/gihub';
 
 type Article = {
   id: number;
@@ -16,14 +16,14 @@ type Article = {
 const articleService = {
   async get(articleSlug: string) {
     let githubDetails = {
-      markdown: "",
+      markdown: '',
       commit: {},
     };
 
     const { data } = await supabase
-      .from("Articles")
-      .select("*")
-      .filter("id", "eq", articleSlug);
+      .from('Articles')
+      .select('*')
+      .filter('id', 'eq', articleSlug);
 
     const [article] = data || [];
 
@@ -55,11 +55,11 @@ const articleService = {
     userId: string;
   }) => {
     const { data, error } = await supabase
-      .from("Articles")
-      .select("*")
-      .filter("folder_id", folderId ? "eq" : "is", folderId)
-      .filter("user_id", "eq", userId)
-      .order("name", { ascending: true });
+      .from('Articles')
+      .select('*')
+      .filter('folder_id', folderId ? 'eq' : 'is', folderId)
+      .filter('user_id', 'eq', userId)
+      .order('name', { ascending: true });
 
     if (error) {
       throw new Error(error.message);
@@ -69,8 +69,8 @@ const articleService = {
   },
 
   store: (article: z.infer<typeof articleSchema>) =>
-    supabase.from("Articles").insert(article),
-  remove: (id: number) => supabase.from("Articles").delete().eq("id", id),
+    supabase.from('Articles').upsert(article).select(),
+  remove: (id: number) => supabase.from('Articles').delete().eq('id', id),
 };
 
 export { articleService };

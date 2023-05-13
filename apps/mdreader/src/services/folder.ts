@@ -1,6 +1,6 @@
-import { z } from "zod";
-import { folderSchema } from "../schema";
-import { supabase } from "./supabase";
+import { z } from 'zod';
+import { folderSchema } from '../schema';
+import { supabase } from './supabase';
 
 type Folder = {
   id: number;
@@ -18,11 +18,12 @@ const folderService = {
     userId: string;
   }) => {
     const { data, error } = await supabase
-      .from("Folders")
-      .select("*")
-      .filter("folder_id", folderId ? "eq" : "is", folderId)
-      .filter("user_id", "eq", userId)
-      .order("name", { ascending: true });
+      .from('Folders')
+      .select('*')
+      .filter('folder_id', folderId ? 'eq' : 'is', folderId)
+      .filter('user_id', 'eq', userId)
+      .order('name', { ascending: true })
+      .select('*, Folders(*)');
 
     if (error) {
       throw new Error(error.message);
@@ -31,8 +32,8 @@ const folderService = {
     return (data ?? []) as Folder[];
   },
   store: (folder: z.infer<typeof folderSchema>) =>
-    supabase.from("Folders").insert(folder),
-  remove: (id: number) => supabase.from("Folders").delete().eq("id", id),
+    supabase.from('Folders').upsert(folder).select(),
+  remove: (id: number) => supabase.from('Folders').delete().eq('id', id),
 };
 
 export { folderService };
