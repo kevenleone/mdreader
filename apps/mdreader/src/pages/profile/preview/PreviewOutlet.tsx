@@ -6,11 +6,11 @@ import { articleSlugAtom } from '../../../store/articles.atom';
 const previewStore = createStore();
 
 const PreviewOutlet = () => {
-  const { id } = useParams();
+  const { id, slug } = useParams();
 
   useEffect(() => {
     if (id) {
-      previewStore.set(articleSlugAtom, id);
+      previewStore.set(articleSlugAtom, { id, slug });
     }
   }, [id]);
 

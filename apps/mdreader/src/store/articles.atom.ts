@@ -4,7 +4,9 @@ import { atom } from 'jotai';
 import { getCommitDetails, getUserAndRepoByRawUri } from '../utils/gihub';
 import { GithubCommit } from '../types';
 
-export const articleSlugAtom = atom<string | null>(null);
+export const articleSlugAtom = atom<{ id?: string; slug?: string } | null>(
+  null
+);
 
 export const articleAtom = atomWithCache(async (get) => {
   const articleSlug = get(articleSlugAtom);
@@ -21,7 +23,8 @@ export const articleAtom = atomWithCache(async (get) => {
   const { data } = await supabase
     .from('Articles')
     .select('*')
-    .filter('id', 'eq', articleSlug);
+    .filter('id', 'eq', articleSlug.id)
+    .filter('slug', 'eq', articleSlug.slug);
 
   const [article] = data || [];
 

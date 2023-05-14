@@ -142,7 +142,7 @@ const useFolderAndArticleActions = ({
             })),
         },
       ],
-      href: `preview/${article.id}`,
+      href: `preview/${article.id}/${article.slug}`,
       Icon: File,
     }));
 

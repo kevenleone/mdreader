@@ -68,7 +68,7 @@ const MyProfile = () => {
               <FeaturedArticle
                 key={index}
                 gradient={colors[index]}
-                path={`preview/${article.id}`}
+                path={`preview/${article.id}/${article.slug}`}
                 title={article.name}
                 views={1000}
               />

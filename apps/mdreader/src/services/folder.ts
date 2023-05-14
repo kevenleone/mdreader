@@ -33,7 +33,8 @@ const folderService = {
   },
   store: (folder: z.infer<typeof folderSchema>) =>
     supabase.from('Folders').upsert(folder).select(),
-  remove: (id: number) => supabase.from('Folders').delete().eq('id', id),
+  remove: (id: number) =>
+    supabase.from('Folders').delete().eq('id', id).select(),
 };
 
 export { folderService };
