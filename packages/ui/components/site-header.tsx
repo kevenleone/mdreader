@@ -12,17 +12,9 @@ export const siteConfig = {
       title: 'Home',
       href: '/',
     },
-    {
-      title: 'App',
-      href: '/app',
-    },
-    {
-      title: 'Profile',
-      href: '/profile',
-    },
   ],
   links: {
-    github: 'https://github.com/kevenleone/md-reader-v2',
+    github: 'https://github.com/kevenleone/mdreader',
   },
 };
 

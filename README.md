@@ -1,81 +1,49 @@
-# Turborepo starter
+# MD Reader
+> Effortlessly organize your favorite Markdown into 'Articles' that are both easy to manage and share with others. Say goodbye to cluttered notes and hello to a sleek, streamlined system that puts your ideas front and center.
 
-This is an official starter Turborepo.
 
-## Using this example
+## Description
 
-Run the following command:
+Save and organize your favorites markdown files in a single storage and share with friends.
 
-```sh
-npx create-turbo@latest
-```
+The application was designed to be Client Side (Vite) and leverage Supabase for Auth and Storage, still considering to move to SSR approach.
 
-## What's inside?
+## :zap: Installation and Instructions
 
-This Turborepo includes the following packages/apps:
+- Install the packages `yarn`
 
-### Apps and Packages
+#### Folder Structure
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `ui`: a stub React component library shared by both `web` and `docs` applications
-- `eslint-config-custom`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `tsconfig`: `tsconfig.json`s used throughout the monorepo
-
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
-
-### Utilities
-
-This Turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-### Build
-
-To build all apps and packages, run the following command:
+* apps/mdreader
+  * Main application using Vite
+* packages/md
+  * Component Library responsible for rendering Articles `(.md files)`
+  * Renderer made with rehype and remark libraries.
+* packages/ui
+  * Reusable Components provided by [shadcn/ui](https://github.com/shadcn/ui).
 
 ```
-cd my-turborepo
-pnpm build
+apps/mdreader
+packages/md
+packages/ui
 ```
 
-### Develop
 
-To develop all apps and packages, run the following command:
 
-```
-cd my-turborepo
-pnpm dev
-```
+## Motivation
 
-### Remote Caching
+Organizing content and favorites is a difficult job, especially when they are markdown files mirrored in random repositories, as I have the habit of searching documents on Github, many of them focused on good practices and usage guides the favorite button and selecting by topics becomes a little harder.
 
-Turborepo can use a technique known as [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
+The aim of the project is to centralize these valuable documents and save them to your profile, you can create articles and folders for organization and the project nicely displays the markdown content.
 
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup), then enter the following commands:
+## :handshake: **Contributing**
+If you liked the project and want to cooperate feel free to fork this repository and send Pull Requests.
 
-```
-cd my-turborepo
-npx turbo login
-```
+All kinds of contributions are very welcome and appreciated
 
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
+-   ⭐️ Star the project
+-   🐛 Find and report issues
+-   📥 Submit PRs to help solve issues or add features
 
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
-```
-npx turbo link
-```
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turbo.build/repo/docs/core-concepts/monorepos/running-tasks)
-- [Caching](https://turbo.build/repo/docs/core-concepts/caching)
-- [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching)
-- [Filtering](https://turbo.build/repo/docs/core-concepts/monorepos/filtering)
-- [Configuration Options](https://turbo.build/repo/docs/reference/configuration)
-- [CLI Usage](https://turbo.build/repo/docs/reference/command-line-reference)
+## :book: License
+MIT license, Copyright (c) 2023 Keven Leone.
