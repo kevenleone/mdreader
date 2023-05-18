@@ -1,6 +1,6 @@
-import useSWR from "swr";
+import useSWR from 'swr';
 
-import { articleService } from "../services/article";
+import { articleService } from '../services/article';
 
 type Props = {
   userId: string | null;
@@ -9,10 +9,12 @@ type Props = {
 
 const useArticles = (props: Props) =>
   useSWR(
-    {
-      ...props,
-      key: "articles",
-    },
+    props.userId
+      ? {
+          ...props,
+          key: 'articles',
+        }
+      : null,
     articleService.getAll
   );
 

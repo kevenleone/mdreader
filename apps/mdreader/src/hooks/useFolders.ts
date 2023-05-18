@@ -1,6 +1,6 @@
-import useSWR from "swr";
+import useSWR from 'swr';
 
-import { folderService } from "../services/folder";
+import { folderService } from '../services/folder';
 
 type Props = {
   userId: string;
@@ -9,10 +9,12 @@ type Props = {
 
 const useFolders = (props: Props) =>
   useSWR(
-    {
-      ...props,
-      key: "folders",
-    },
+    props.userId
+      ? {
+          ...props,
+          key: 'folders',
+        }
+      : null,
     folderService.getAll
   );
 
