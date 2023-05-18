@@ -6,7 +6,7 @@ import { Github } from 'lucide-react';
 import { Button } from '@mdreader/ui/Button';
 
 import { useTheme } from '../../hooks/useTheme';
-import { sessionAtom } from '../../hooks/useSession';
+import useSession, { sessionAtom } from '../../hooks/useSession';
 import { supabase } from '../../services/supabase';
 import { ConfirmDialog } from '../../components/confirm-dialog/ConfirmDialog';
 
@@ -14,9 +14,10 @@ export default function MDReaderLayout() {
   const [open, setOpen] = useState(false);
   const { toggle } = useTheme();
   const navigate = useNavigate();
-  const session = useAtomValue(sessionAtom);
 
-  const user = session.data.session?.user?.user_metadata;
+  const session = useSession();
+
+  const user = session?.user?.user_metadata;
 
   async function signInWithGitHub() {
     await supabase.auth.signInWithOAuth({
@@ -37,7 +38,7 @@ export default function MDReaderLayout() {
               actions: {
                 onClickLogout: () =>
                   supabase.auth.signOut().then(() => {
-                    (window as any).location = window.location.host;
+                    navigate('/');
                   }),
                 onClickProfile: () => navigate(`/profile/${user.user_name}`),
               },

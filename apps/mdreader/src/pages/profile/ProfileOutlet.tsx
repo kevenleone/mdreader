@@ -1,13 +1,25 @@
-import { useEffect } from "react";
-import { Provider, createStore, useAtomValue } from "jotai";
-import { Outlet, useParams, useSearchParams } from "react-router-dom";
+import { Outlet, useParams, useSearchParams } from 'react-router-dom';
 
-import { userAtom } from "../../store/user.atom";
-import { githubUserAtom } from "../../store/github.user.atom";
-import { Profile } from "../../components/profile";
+import { Profile } from '../../components/profile';
+import useFetch from '../../hooks/useFetch';
+import { GithubProfile } from '../../types';
 
-export const ProfileHeader = () => {
-  const githubUser = useAtomValue(githubUserAtom);
+type ProfileHeaderProps = {
+  username: string;
+};
+
+export const ProfileHeader: React.FC<ProfileHeaderProps> = ({ username }) => {
+  const { data: githubUser, isLoading } = useFetch<GithubProfile>(
+    `https://api.github.com/users/${username}`
+  );
+
+  if (isLoading) {
+    return <span>Loading...</span>;
+  }
+
+  if (!githubUser) {
+    return null;
+  }
 
   return (
     <Profile
@@ -19,31 +31,26 @@ export const ProfileHeader = () => {
   );
 };
 
-const myStore = createStore();
-
 const ProfileOutlet = () => {
   const { username } = useParams();
   const [searchParams] = useSearchParams();
 
-  const folderId = searchParams.get("folderId")
-    ? Number(searchParams.get("folderId"))
-    : null;
-
-  useEffect(() => {
-    myStore.set(userAtom, username ?? "");
-  }, [username]);
-
   return (
-    <Provider store={myStore}>
-      <section
-        id="profile-outlet"
-        className="flex flex-col justify-center items-start border-gray-200 dark:border-gray-700 mx-auto"
-      >
-        <ProfileHeader />
-        
-        <Outlet context={{ folderId, username }} />
-      </section>
-    </Provider>
+    <section
+      id="profile-outlet"
+      className="flex flex-col justify-center items-start border-gray-200 dark:border-gray-700 mx-auto"
+    >
+      <ProfileHeader username={username as string} />
+
+      <Outlet
+        context={{
+          folderId: searchParams.get('folderId')
+            ? Number(searchParams.get('folderId'))
+            : null,
+          username,
+        }}
+      />
+    </section>
   );
 };
 

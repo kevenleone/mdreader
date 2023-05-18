@@ -1,5 +1,4 @@
 import { Folder } from 'lucide-react';
-import { useAtomValue } from 'jotai';
 import { useMemo } from 'react';
 import { useOutletContext } from 'react-router-dom';
 
@@ -8,9 +7,10 @@ import { List } from '../../components/list';
 import { Panel } from '../../components/panels';
 import { useArticles } from '../../hooks/useArticles';
 import { useFolders } from '../../hooks/useFolders';
-import { userIdAtom } from '../../store/folder.atom';
 import useFolderAndArticleActions from './useFolderAndArticleActions';
 import { ConfirmDialog } from '../../components/confirm-dialog/ConfirmDialog';
+import useUserId from '../../hooks/useUserId';
+import useSession from '../../hooks/useSession';
 
 const colors = [
   'from-[#D8B4FE] to-[#818CF8]',
@@ -23,11 +23,14 @@ type OutletContext = {
 };
 
 const MyProfile = () => {
-  const userId = useAtomValue(userIdAtom);
+  const { data: userId } = useUserId();
   const { folderId } = useOutletContext<OutletContext>();
+  const session = useSession();
+
+  const isMyProfile = session?.user?.id === userId;
 
   const contentProps = {
-    userId,
+    userId: userId as string,
     folderId,
   };
 
@@ -48,6 +51,7 @@ const MyProfile = () => {
   const { confirmDialogProps, panelProps, items } = useFolderAndArticleActions({
     articles,
     folders,
+    canModify: isMyProfile,
     mutateArticles,
     mutateFolders,
   });
@@ -59,6 +63,7 @@ const MyProfile = () => {
 
   return (
     <div className="w-full">
+      {JSON.stringify(isMyProfile)}
       {!!featuredArticles.length && (
         <List>
           <List.Heading>Featured Articles</List.Heading>
@@ -81,9 +86,11 @@ const MyProfile = () => {
         <List.Heading>
           <div className="flex justify-between">
             Content
-            <div className="flex gap-3">
-              <Panel {...panelProps} />
-            </div>
+            {isMyProfile && (
+              <div className="flex gap-3">
+                <Panel {...panelProps} />
+              </div>
+            )}
           </div>
         </List.Heading>
 
