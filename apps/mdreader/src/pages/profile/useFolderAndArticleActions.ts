@@ -13,6 +13,7 @@ type Props = {
   folders: any[];
   mutateArticles: any;
   mutateFolders: any;
+  canModify: boolean;
 };
 
 type ConfirmDialogState = {
@@ -33,6 +34,7 @@ const useFolderAndArticleActions = ({
   folders,
   mutateArticles,
   mutateFolders,
+  canModify,
 }: Props) => {
   const { toast } = useToast();
 
@@ -117,68 +119,79 @@ const useFolderAndArticleActions = ({
   const items = useMemo(() => {
     const _articles = articles.map((article) => ({
       ...article,
-      actions: [
-        {
-          name: 'Edit',
-          onClick: () =>
-            setPanelProps((panelProps) => ({
-              ...panelProps,
-              defaultPanel: 'article',
-              defaultValues: article,
-              open: true,
-            })),
-        },
-        {
-          name: 'Remove',
-          onClick: async () =>
-            setConfirmDialogProps((prevState) => ({
-              ...prevState,
-              description: getDescriptionMessage(article.name),
-              onConfirm: () =>
-                articleService
-                  .remove(article.id)
-                  .then(() => onDelete(article, mutateArticles)),
-              open: true,
-            })),
-        },
-      ],
+      actions: canModify
+        ? [
+            {
+              name: 'Edit',
+              onClick: () =>
+                setPanelProps((panelProps) => ({
+                  ...panelProps,
+                  defaultPanel: 'article',
+                  defaultValues: article,
+                  open: true,
+                })),
+            },
+            {
+              name: 'Remove',
+              onClick: async () =>
+                setConfirmDialogProps((prevState) => ({
+                  ...prevState,
+                  description: getDescriptionMessage(article.name),
+                  onConfirm: () =>
+                    articleService
+                      .remove(article.id)
+                      .then(() => onDelete(article, mutateArticles)),
+                  open: true,
+                })),
+            },
+          ]
+        : null,
       href: `preview/${article.id}/${article.slug}`,
       Icon: File,
     }));
 
     const _folders = folders.map((folder) => ({
       ...folder,
-      actions: [
-        {
-          name: 'Edit',
-          onClick: () =>
-            setPanelProps((panelProps) => ({
-              ...panelProps,
-              defaultValues: folder,
-              defaultPanel: 'folder',
-              open: true,
-            })),
-        },
-        {
-          name: 'Remove',
-          onClick: async () =>
-            setConfirmDialogProps((prevState) => ({
-              ...prevState,
-              description: getDescriptionMessage(folder.name),
-              open: true,
-              onConfirm: () =>
-                folderService
-                  .remove(folder.id)
-                  .then(() => onDelete(folder, mutateFolders)),
-            })),
-        },
-      ],
+      actions: canModify
+        ? [
+            {
+              name: 'Edit',
+              onClick: () =>
+                setPanelProps((panelProps) => ({
+                  ...panelProps,
+                  defaultValues: folder,
+                  defaultPanel: 'folder',
+                  open: true,
+                })),
+            },
+            {
+              name: 'Remove',
+              onClick: async () =>
+                setConfirmDialogProps((prevState) => ({
+                  ...prevState,
+                  description: getDescriptionMessage(folder.name),
+                  open: true,
+                  onConfirm: () =>
+                    folderService
+                      .remove(folder.id)
+                      .then(() => onDelete(folder, mutateFolders)),
+                })),
+            },
+          ]
+        : null,
       href: `?folderId=${folder.id}`,
       Icon: Folder,
     }));
 
     return [..._folders, ..._articles];
-  }, [articles, folders, onDelete, setConfirmDialogProps, setPanelProps]);
+  }, [
+    articles,
+    folders,
+    canModify,
+    onDelete,
+    setConfirmDialogProps,
+    setPanelProps,
+  ]);
 
   return {
     confirmDialogProps: {
