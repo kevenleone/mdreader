@@ -1,11 +1,10 @@
+import { Markdown } from '@mdreader/md';
 import { useAtomValue } from 'jotai';
 import { atomWithCache } from 'jotai-cache';
 
-import { Markdown } from '@mdreader/md';
-
 const cachedAtom = atomWithCache(async () => {
   const response = await fetch(
-    `https://raw.githubusercontent.com/liferay/liferay-frontend-projects/master/guidelines/dxp/code_review.md`
+    `https://raw.githubusercontent.com/kevenleone/mdreader/main/README.md`
   );
 
   return response.text();

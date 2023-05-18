@@ -7,6 +7,7 @@ import MDReaderRouter from './Router.tsx';
 import './index.css';
 import '@mdreader/md/styles/md.css';
 import '@mdreader/ui/styles/ui.css';
+import AppContextProvider from './context/AppContext.tsx';
 
 function localStorageProvider() {
   const map = new Map(JSON.parse(sessionStorage.getItem('app-cache') || '[]'));
@@ -20,14 +21,16 @@ function localStorageProvider() {
 }
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  <SWRConfig
-    value={{
-      refreshInterval: 0,
-      provider: localStorageProvider,
-      revalidateOnFocus: false,
-    }}
-  >
-    <Toaster />
-    <MDReaderRouter />
-  </SWRConfig>
+  <AppContextProvider>
+    <SWRConfig
+      value={{
+        refreshInterval: 0,
+        provider: localStorageProvider,
+        revalidateOnFocus: false,
+      }}
+    >
+      <Toaster />
+      <MDReaderRouter />
+    </SWRConfig>
+  </AppContextProvider>
 );
