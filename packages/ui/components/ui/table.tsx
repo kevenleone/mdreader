@@ -14,6 +14,7 @@ const Table = React.forwardRef<
     />
   </div>
 ));
+Table.displayName = 'Table';
 
 const TableHeader = React.forwardRef<
   HTMLTableSectionElement,
@@ -21,6 +22,7 @@ const TableHeader = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <thead ref={ref} className={cn('[&_tr]:border-b', className)} {...props} />
 ));
+TableHeader.displayName = 'TableHeader';
 
 const TableBody = React.forwardRef<
   HTMLTableSectionElement,
@@ -32,6 +34,7 @@ const TableBody = React.forwardRef<
     {...props}
   />
 ));
+TableBody.displayName = 'TableBody';
 
 const TableFooter = React.forwardRef<
   HTMLTableSectionElement,
@@ -43,6 +46,7 @@ const TableFooter = React.forwardRef<
     {...props}
   />
 ));
+TableFooter.displayName = 'TableFooter';
 
 const TableRow = React.forwardRef<
   HTMLTableRowElement,
@@ -60,8 +64,8 @@ const TableRow = React.forwardRef<
 TableRow.displayName = 'TableRow';
 
 const TableHead = React.forwardRef<
-  HTMLTableColElement,
-  React.ThHTMLAttributes<HTMLTableColElement>
+  HTMLTableCellElement,
+  React.ThHTMLAttributes<HTMLTableCellElement>
 >(({ className, ...props }, ref) => (
   <th
     ref={ref}
@@ -75,8 +79,8 @@ const TableHead = React.forwardRef<
 TableHead.displayName = 'TableHead';
 
 const TableCell = React.forwardRef<
-  HTMLTableColElement,
-  React.TdHTMLAttributes<HTMLTableColElement>
+  HTMLTableCellElement,
+  React.TdHTMLAttributes<HTMLTableCellElement>
 >(({ className, ...props }, ref) => (
   <td
     ref={ref}
@@ -84,10 +88,11 @@ const TableCell = React.forwardRef<
     {...props}
   />
 ));
+TableCell.displayName = 'TableCell';
 
 const TableCaption = React.forwardRef<
-  HTMLTableSectionElement,
-  React.HTMLAttributes<HTMLTableSectionElement>
+  HTMLTableCaptionElement,
+  React.HTMLAttributes<HTMLTableCaptionElement>
 >(({ className, ...props }, ref) => (
   <caption
     ref={ref}
@@ -95,12 +100,6 @@ const TableCaption = React.forwardRef<
     {...props}
   />
 ));
-
-Table.displayName = 'Table';
-TableHeader.displayName = 'TableHeader';
-TableBody.displayName = 'TableBody';
-TableFooter.displayName = 'TableFooter';
-TableCell.displayName = 'TableCell';
 TableCaption.displayName = 'TableCaption';
 
 export {

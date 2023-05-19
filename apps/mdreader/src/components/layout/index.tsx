@@ -1,12 +1,11 @@
 import { Layout } from '@mdreader/ui/components/layout';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 import { Suspense, useState } from 'react';
-import { useAtomValue } from 'jotai';
 import { Github } from 'lucide-react';
 import { Button } from '@mdreader/ui/Button';
 
 import { useTheme } from '../../hooks/useTheme';
-import useSession, { sessionAtom } from '../../hooks/useSession';
+import useSession from '../../hooks/useSession';
 import { supabase } from '../../services/supabase';
 import { ConfirmDialog } from '../../components/confirm-dialog/ConfirmDialog';
 
