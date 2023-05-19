@@ -63,7 +63,6 @@ const MyProfile = () => {
 
   return (
     <div className="w-full">
-      {JSON.stringify(isMyProfile)}
       {!!featuredArticles.length && (
         <List>
           <List.Heading>Featured Articles</List.Heading>

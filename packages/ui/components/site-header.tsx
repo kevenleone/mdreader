@@ -12,6 +12,10 @@ export const siteConfig = {
       title: 'Home',
       href: '/',
     },
+    {
+      title: 'Users',
+      href: '/users',
+    },
   ],
   links: {
     github: 'https://github.com/kevenleone/mdreader',
