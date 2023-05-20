@@ -7,7 +7,7 @@ import {
   TableHeader,
   TableRow,
 } from '@mdreader/ui/components/ui/table';
-import { useGithubProfiles } from '../../hooks/useGithubProfiles';
+import { useProfiles } from '../../hooks/useProfiles';
 import {
   Avatar,
   AvatarImage,
@@ -16,7 +16,7 @@ import {
 import { Link } from 'react-router-dom';
 
 const Users = () => {
-  const { data: users } = useGithubProfiles();
+  const { data: users } = useProfiles();
 
   return (
     <div className="w-100 max-w-full">

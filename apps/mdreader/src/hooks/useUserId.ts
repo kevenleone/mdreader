@@ -15,7 +15,7 @@ const useUserId = () => {
 
     if (username) {
       const { data } = await supabase
-        .from('GithubProfile')
+        .from('Profiles')
         .select('*')
         .filter('login', 'eq', username);
 

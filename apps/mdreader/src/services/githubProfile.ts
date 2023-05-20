@@ -1,9 +1,7 @@
 import { supabase } from './supabase';
 
-type GithubUser = {
-  bio: string;
-  company: string;
-  id: number;
+export type GithubUser = {
+  id: string;
   login: string;
   name: string;
   photo: string;
@@ -12,7 +10,7 @@ type GithubUser = {
 const githubProfileService = {
   getAll: async () => {
     const { data, error } = await supabase
-      .from('GithubProfile')
+      .from('Profiles')
       .select('*')
       .order('login', { ascending: true });
 
@@ -21,6 +19,33 @@ const githubProfileService = {
     }
 
     return (data ?? []) as GithubUser[];
+  },
+
+  getOne: async ({ login }: { login: string }) => {
+    const { data, error } = await supabase
+      .from('Profiles')
+      .select('*')
+      .filter('login', 'eq', login)
+      .select();
+
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    return ((data ?? []) as GithubUser[])[0];
+  },
+
+  store: async (profile: GithubUser) => {
+    const { data, error } = await supabase
+      .from('Profiles')
+      .insert(profile)
+      .select();
+
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    return ((data ?? []) as GithubUser[])[0];
   },
 };
 
