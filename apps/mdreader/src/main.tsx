@@ -21,16 +21,16 @@ function localStorageProvider() {
 }
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  <AppContextProvider>
-    <SWRConfig
-      value={{
-        refreshInterval: 0,
-        provider: localStorageProvider,
-        revalidateOnFocus: false,
-      }}
-    >
+  <SWRConfig
+    value={{
+      provider: localStorageProvider,
+      refreshInterval: 0,
+      revalidateOnFocus: false,
+    }}
+  >
+    <AppContextProvider>
       <Toaster />
       <MDReaderRouter />
-    </SWRConfig>
-  </AppContextProvider>
+    </AppContextProvider>
+  </SWRConfig>
 );
