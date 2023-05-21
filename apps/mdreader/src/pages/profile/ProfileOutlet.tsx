@@ -3,6 +3,7 @@ import { Outlet, useParams, useSearchParams } from 'react-router-dom';
 import { Profile } from '../../components/profile';
 import useFetch from '../../hooks/useFetch';
 import { GithubProfile } from '../../types';
+import { useFolder } from '../../hooks/useFolders';
 
 type ProfileHeaderProps = {
   username: string;
@@ -34,6 +35,11 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({ username }) => {
 const ProfileOutlet = () => {
   const { username } = useParams();
   const [searchParams] = useSearchParams();
+  const folderId = searchParams.get('folderId')
+    ? Number(searchParams.get('folderId'))
+    : null;
+
+  const { data: folder } = useFolder(folderId as number | undefined);
 
   return (
     <section
@@ -44,9 +50,8 @@ const ProfileOutlet = () => {
 
       <Outlet
         context={{
-          folderId: searchParams.get('folderId')
-            ? Number(searchParams.get('folderId'))
-            : null,
+          folder,
+          folderId,
           username,
         }}
       />

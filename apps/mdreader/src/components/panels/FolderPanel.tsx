@@ -1,13 +1,19 @@
 import { useForm } from 'react-hook-form';
+import { useOutletContext } from 'react-router-dom';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import { Button } from '@mdreader/ui/components/ui/button';
 
+import { Folder } from '../../services/folder';
 import { folderSchema } from '../../schema';
+import { OnSaveArticleAndFolder } from '../../pages/profile/useFolderAndArticleActions';
 import { slugify } from '../../utils/slugify';
 import Form from '../form';
-import { OnSaveArticleAndFolder } from '../../pages/profile/useFolderAndArticleActions';
+
+type OutletContext = {
+  folder?: Folder;
+};
 
 type FolderForm = z.infer<typeof folderSchema>;
 
@@ -22,8 +28,11 @@ export const FolderPanelForm: React.FC<FolderPanelFormProps> = ({
   onSave,
   onClose,
 }) => {
+  const { folder } = useOutletContext<OutletContext>();
+
   const folderForm = useForm<FolderForm>({
-    defaultValues,
+    defaultValues: { ...defaultValues, folder_id: folder?.id },
+
     resolver: zodResolver(folderSchema),
   });
 
@@ -57,6 +66,13 @@ export const FolderPanelForm: React.FC<FolderPanelFormProps> = ({
         <Form.Input name="slug" type="text" disabled value={slug} />
         <Form.ErrorMessage field="slug" />
       </Form.Field>
+
+      {folder && (
+        <Form.Field>
+          <Form.Label htmlFor="folder">Parent Folder</Form.Label>
+          <Form.Input disabled name="folder" type="text" value={folder.name} />
+        </Form.Field>
+      )}
 
       <div className="flex justify-between gap-3">
         <Button disabled={isSubmitting} type="submit">

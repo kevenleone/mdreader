@@ -84,7 +84,7 @@ const MyProfile = () => {
       <List>
         <List.Heading>
           <div className="flex justify-between">
-            Content
+            <span>Content</span>
             {isMyProfile && (
               <div className="flex gap-3">
                 <Panel {...panelProps} />
@@ -93,13 +93,15 @@ const MyProfile = () => {
           </div>
         </List.Heading>
 
-        <List.Item
-          Icon={Folder}
-          name=".."
-          actions={[]}
-          description=""
-          href=""
-        />
+        {folderId && (
+          <List.Item
+            Icon={Folder}
+            name=".."
+            actions={[]}
+            description=""
+            href=""
+          />
+        )}
 
         {isContentLoading
           ? 'Loading...'

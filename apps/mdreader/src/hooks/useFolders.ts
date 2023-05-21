@@ -7,7 +7,10 @@ type Props = {
   folderId: number | null;
 };
 
-const useFolders = (props: Props) =>
+export const useFolder = (folderId?: number) =>
+  useSWR({ folderId, key: 'folder' }, folderId ? folderService.getOne : null);
+
+export const useFolders = (props: Props) =>
   useSWR(
     props.userId
       ? {
@@ -17,5 +20,3 @@ const useFolders = (props: Props) =>
       : null,
     folderService.getAll
   );
-
-export { useFolders };

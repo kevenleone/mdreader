@@ -20,6 +20,7 @@ export const articleSchema = z
 
         return _fileUrl.endsWith('.md') || _fileUrl.endsWith('.markdown');
       }, `Invalid file extension, it should be ['.md', '.markdown']`),
+    folder_id: z.number().optional(),
     id: z.number().optional(),
     name: z
       .string()
@@ -33,7 +34,7 @@ export const articleSchema = z
 export const folderSchema = z
   .object({
     description: z.string().max(250),
-    folderId: z.number().optional(),
+    folder_id: z.number().optional(),
     id: z.number().optional(),
     name: z
       .string()
