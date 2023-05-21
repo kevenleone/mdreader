@@ -6,7 +6,7 @@ type BreadCrumbProps = {
   paths: string[];
 };
 
-export const ArrowLeft: React.FC = () => (
+const ArrowLeft: React.FC = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     className="h-4 w-4 text-gray-500 dark:text-gray-100"
@@ -23,6 +23,23 @@ export const ArrowLeft: React.FC = () => (
     />
   </svg>
 );
+type ClickToBackProps = {
+  navigateTo: () => void;
+};
+
+export const ClicktoBack: React.FC<ClickToBackProps> = ({ navigateTo }) => {
+  return (
+    <span
+      onClick={navigateTo}
+      className="cursor-pointer   flex h-6  items-center leading-7 my-4 rounded-lg transition-all"
+    >
+      <ArrowLeft />
+      <span className="hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200 ml-2 text-gray-600 text-lg">
+        Click to Back
+      </span>
+    </span>
+  );
+};
 
 const BreadCrumb: React.FC<BreadCrumbProps> = ({ paths = [] }) => {
   const navigate = useNavigate();
@@ -31,15 +48,7 @@ const BreadCrumb: React.FC<BreadCrumbProps> = ({ paths = [] }) => {
 
   return (
     <>
-      <span
-        onClick={() => navigate(-1)}
-        className="cursor-pointer   flex h-6  items-center leading-7 my-4 rounded-lg transition-all"
-      >
-        <ArrowLeft />
-        <span className="hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200 ml-2 text-gray-600 text-lg">
-          Click to Back
-        </span>
-      </span>
+      <ClicktoBack navigateTo={() => navigate(-1)} />
       <ul className="hidden sm:flex">
         {(paths as string[]).map((path, index) => {
           const position = index + 1;

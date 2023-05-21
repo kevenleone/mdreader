@@ -2,14 +2,17 @@ import { useAtomValue } from 'jotai';
 import { articleAtom } from '../../../store/articles.atom';
 
 import Article from '../../../components/article';
-import BreadCrumb from '../../../components/breadcrumb/Breadcrumb';
+import { ClicktoBack } from '../../../components/breadcrumb/Breadcrumb';
+import { useNavigate } from 'react-router-dom';
 
 const Preview = () => {
   const { article, markdown, commit } = useAtomValue(articleAtom);
 
+  const navigate = useNavigate();
+
   return (
     <>
-      <BreadCrumb paths={['Home', 'Profile', article?.name]} />
+      <ClicktoBack navigateTo={() => navigate('../')} />
 
       <hr className="w-full h-5" />
 
