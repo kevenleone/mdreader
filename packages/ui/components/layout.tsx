@@ -6,16 +6,15 @@ type LayoutProps = {
   siteHeaderProps: SiteHeaderProps;
 };
 
-const Layout: React.FC<LayoutProps> = ({ children, siteHeaderProps }) => {
-  return (
-    <main>
-      <div className="relative flex min-h-screen flex-col">
-        <SiteHeader {...siteHeaderProps} />
-        <div className="flex-1 bg-background">{children}</div>
-      </div>
-      <TailwindIndicator />
-    </main>
-  );
-};
-
-export { Layout };
+export const Layout: React.FC<LayoutProps> = ({
+  children,
+  siteHeaderProps,
+}) => (
+  <main>
+    <div className="relative flex min-h-screen flex-col">
+      <SiteHeader {...siteHeaderProps} />
+      <div className="flex-1 bg-background">{children}</div>
+    </div>
+    <TailwindIndicator />
+  </main>
+);
