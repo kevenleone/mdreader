@@ -10,10 +10,8 @@ type HTMLTemplateProps = {
   description?: string;
   image?: string;
   host?: string;
-  title: {
-    user: string;
-    slug: string;
-  };
+  title?: string;
+  subtitle?: string;
 };
 
 export const HTMLTemplate = ({
@@ -21,19 +19,22 @@ export const HTMLTemplate = ({
   host,
   image,
   title,
+  subtitle,
 }: HTMLTemplateProps) => (
   <div tw="flex h-full flex-col w-full bg-white">
     <div tw="flex flex-row p-10">
       <div tw="flex flex-col">
         <p tw="text-3xl">
-          {title.user}/<strong>{title.slug}</strong>
+          {title}/<strong>{subtitle}</strong>
         </p>
         <span tw="text-gray-700 pr-30">{description}</span>
       </div>
 
-      <div tw="flex absolute right-10 top-15">
-        <img tw="rounded" width={100} height={100} src={image} />
-      </div>
+      {image && (
+        <div tw="flex absolute right-10 top-15">
+          <img tw="rounded" width={100} height={100} src={image} />
+        </div>
+      )}
     </div>
 
     <div tw="flex flex-col">
