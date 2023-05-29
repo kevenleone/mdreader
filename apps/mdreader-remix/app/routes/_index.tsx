@@ -10,9 +10,7 @@ export async function loader() {
     `https://raw.githubusercontent.com/kevenleone/mdreader/main/README.md`
   );
 
-  const text = await response.text();
-
-  return text;
+  return response.text();
 }
 
 export default function MarkdownPreview() {
