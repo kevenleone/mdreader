@@ -22,9 +22,15 @@ export const getCommitDetails = async ({
   username,
   repository,
   filePath,
-}: GithubRepo) => {
+  token,
+}: GithubRepo & { token?: string }) => {
   const response = await fetch(
-    `https://api.github.com/repos/${username}/${repository}/commits?path=${filePath}&per_page=1`
+    `https://api.github.com/repos/${username}/${repository}/commits?path=${filePath}&per_page=1`,
+    {
+      headers: {
+        ...(token && { Authorization: `Bearer ${token}` }),
+      },
+    }
   );
 
   return response.json();
