@@ -1,5 +1,7 @@
 import { Folder } from 'lucide-react';
 import { useMemo } from 'react';
+import { useOutletContext } from '@remix-run/react';
+
 import { FeaturedArticle } from '~/components/cards/FeatureArticle';
 import { ConfirmDialog } from '~/components/confirm-dialog/ConfirmDialog';
 import { List } from '~/components/list';
@@ -16,9 +18,13 @@ const colors = [
   'from-[#6EE7B7] via-[#3B82F6] to-[#9333EA]',
 ];
 
+type OutletContext = {
+  folderId: number | null;
+};
+
 const MyProfile = () => {
   const { data: userId } = useUserId();
-  const folderId = null;
+  const { folderId } = useOutletContext<OutletContext>();
   const session = useSession();
 
   const isMyProfile = session?.user?.id === userId;

@@ -4,14 +4,21 @@ import { HTMLTemplate, SVG2Img } from '~/og/og';
 import { getFont } from '~/og/og.css';
 
 export async function loader({ request }: LoaderArgs) {
-  const searchParams = new URL(request.url).searchParams;
+  const url = new URL(decodeURIComponent(request.url).replaceAll('&amp;', '&'));
+  const searchParams = url.searchParams;
+
+  const description = searchParams.get('description') ?? '';
+  const image = searchParams.get('image') ?? '';
+  const title = searchParams.get('title') ?? '';
+  const subtitle = searchParams.get('subtitle') ?? '';
 
   const svg = await satori(
     HTMLTemplate({
-      description: 'Lorem Ipsum...',
-      host: 'mdreader.vercel.app',
-      image: 'https://avatars.githubusercontent.com/u/22279592?v=4',
-      title: { user: 'kevenleone', slug: 'how-to-use-css' },
+      description: description,
+      host: url.origin,
+      image: image,
+      title,
+      subtitle,
     }),
     {
       width: 800,
