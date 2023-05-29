@@ -28,13 +28,8 @@ import { getSupabaseServerSession } from './services/supabase';
 import { themeSessionResolver } from './sessions.server';
 import AppContextProvider from './context/AppContext';
 import Layout from './components/layout';
-import stylesheet from '~/index.css';
 
 export const links: LinksFunction = () => [
-  {
-    rel: 'stylesheet',
-    href: stylesheet,
-  },
   ...(cssBundleHref ? [{ rel: 'stylesheet', href: cssBundleHref }] : []),
 ];
 
@@ -62,7 +57,7 @@ export async function loader({ request }: LoaderArgs) {
   };
 
   const [{ session, headers }, { getTheme }] = await Promise.all([
-    getSupabaseServerSession(request, ENV),
+    getSupabaseServerSession(request),
     themeSessionResolver(request),
   ]);
 
@@ -109,12 +104,6 @@ function App() {
 
         <ScrollRestoration />
 
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `window.env = ${JSON.stringify(ENV)}`,
-          }}
-        />
-
         <Scripts />
         <LiveReload />
       </body>
@@ -123,8 +112,7 @@ function App() {
 }
 
 export function ErrorBoundary({ error, ...props }: any) {
-  console.error(1, error);
-  console.error(2, props);
+  console.error('ErrorBoundary', { error, props });
 
   return (
     <html>
