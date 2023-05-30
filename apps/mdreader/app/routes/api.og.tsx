@@ -9,14 +9,16 @@ export async function loader({ request }: LoaderArgs) {
 
   const description = searchParams.get('description') ?? '';
   const image = searchParams.get('image') ?? '';
-  const title = searchParams.get('title') ?? '';
   const subtitle = searchParams.get('subtitle') ?? '';
+  const template = searchParams.get('template') ?? 'default';
+  const title = searchParams.get('title') ?? '';
 
   const svg = await satori(
     HTMLTemplate({
       description: description,
       host: url.origin,
-      image: image,
+      image,
+      template: template as any,
       title,
       subtitle,
     }),
