@@ -16,33 +16,42 @@ export const meta: V2_MetaFunction<ReturnType<typeof loader>> = (props) => {
     },
     {
       property: 'og:image',
-      content: `${props.data.origin}/api/og?title=${props.data.username}`,
+      content: `${props.data.origin}/api/og?title=${
+        props.data.profile?.name ?? props.data.username
+      }&description=${props?.data?.profile?.bio}&image=${
+        props?.data?.profile?.avatar_url ?? ''
+      }`,
     },
     {
       name: 'description',
-      content: props?.data?.description,
+      content: props?.data?.profile?.bio,
     },
   ];
 };
 
 export async function loader({ params, request }: LoaderArgs) {
   const url = new URL(request.url);
-  const isBot = isbot(request.headers);
-  let description = '';
   const { headers, session } = await getSupabaseServerSession(request);
   const username = params?.user ?? session?.user.user_metadata.user_name;
 
-  if (isBot) {
-    const response = await fetch(`https://api.github.com/users/${username}`);
-    if (response.ok) {
-      const data = await response.json();
+  let profile;
 
-      description = data.bio;
-    }
+  const response = await fetch(`https://api.github.com/users/${username}`, {
+    headers: {
+      Authorization: session?.provider_token
+        ? `Bearer ${session?.provider_token}`
+        : '',
+    },
+  });
+
+  if (response.ok) {
+    const data = await response.json();
+
+    profile = data;
   }
 
   return {
-    description,
+    profile,
     headers,
     origin: url.origin,
     session,

@@ -5,8 +5,18 @@ import { Link, useLoaderData } from '@remix-run/react';
 import { getSupabaseServerClient } from '~/services/supabase';
 import { getInitials } from '~/utils';
 
-export const meta: V2_MetaFunction = () => {
-  return [{ title: 'Users | MD Reader' }];
+export const meta: V2_MetaFunction = ({ data: { origin } }) => {
+  return [
+    { title: 'Users | MD Reader' },
+    {
+      name: 'description',
+      content: 'Available Users from MD Reader',
+    },
+    {
+      property: 'og:image',
+      content: `${origin}/api/og?template=site&title=Users | MD Reader`,
+    },
+  ];
 };
 
 export const loader = async ({ request }: LoaderArgs) => {
@@ -15,6 +25,7 @@ export const loader = async ({ request }: LoaderArgs) => {
   const { data: profiles } = await client.from('Profiles').select('*');
 
   return {
+    origin: new URL(request.url).origin,
     profiles: profiles ?? [],
   };
 };
