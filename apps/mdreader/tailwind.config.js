@@ -1,5 +1,5 @@
-import mdTailwindConfig from '@mdreader/md/tailwind.config';
-import uiTailwindConfig from '@mdreader/ui/tailwind.config';
+import uiTailwindConfig from '@mdreader/interface/tailwind.config';
+import mdTailwindConfig from '@mdreader/markdown/tailwind.config';
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -7,10 +7,11 @@ export default {
   ...uiTailwindConfig,
   darkMode: 'class',
   content: [
+    './app/**/*.{js,jsx,ts,tsx}',
     './index.html',
     './src/**/*.{js,ts,jsx,tsx}',
-    '../../packages/ui/**/*.{js,ts,jsx,tsx}',
-    '../../packages/md/**/*.{js,ts,jsx,tsx}',
+    '../../packages/interface/**/*.{js,ts,jsx,tsx}',
+    '../../packages/markdown/**/*.{js,ts,jsx,tsx}',
   ],
   theme: {
     ...uiTailwindConfig.theme,

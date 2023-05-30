@@ -21,8 +21,8 @@ import {
 
 import { createBrowserClient } from '@supabase/auth-helpers-remix';
 
-import '@mdreader/md/styles/md.css';
-import '@mdreader/ui/styles/ui.css';
+import '@mdreader/markdown/src/styles/md.css';
+import '@mdreader/interface/src/styles/ui.css';
 
 import { getSupabaseServerSession } from './services/supabase';
 import { themeSessionResolver } from './sessions.server';
