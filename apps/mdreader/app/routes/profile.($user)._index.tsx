@@ -11,6 +11,7 @@ import useFolderAndArticleActions from '~/hooks/useFolderAndArticleActions';
 import { useFolders } from '~/hooks/useFolders';
 import useSession from '~/hooks/useSession';
 import useUserId from '~/hooks/useUserId';
+import { Folder as IFolder } from '~/services/folder';
 
 const colors = [
   'from-[#D8B4FE] to-[#818CF8]',
@@ -19,12 +20,13 @@ const colors = [
 ];
 
 type OutletContext = {
+  folder?: IFolder;
   folderId: number | null;
 };
 
 const MyProfile = () => {
   const { data: userId } = useUserId();
-  const { folderId } = useOutletContext<OutletContext>();
+  const { folder, folderId } = useOutletContext<OutletContext>();
   const session = useSession();
 
   const isMyProfile = session?.user?.id === userId;
@@ -50,8 +52,8 @@ const MyProfile = () => {
 
   const { confirmDialogProps, panelProps, items } = useFolderAndArticleActions({
     articles,
-    folders,
     canModify: isMyProfile,
+    folders,
     mutateArticles,
     mutateFolders,
   });
@@ -60,6 +62,11 @@ const MyProfile = () => {
     () => articles.filter((article) => article.featured),
     [articles]
   );
+
+  const isFolderEmpty = !isContentLoading && !items.length;
+  const previousFolder = folder?.folder_id
+    ? `?folderId=${folder.folder_id}`
+    : '';
 
   return (
     <div className="w-full">
@@ -83,24 +90,48 @@ const MyProfile = () => {
 
       <List>
         <List.Heading>
-          <div className="flex justify-between">
-            <span>Content</span>
-            {isMyProfile && (
-              <div className="flex gap-3">
-                <Panel {...panelProps} />
-              </div>
-            )}
-          </div>
+          {!isFolderEmpty && (
+            <div className="flex justify-between">
+              <span>Content</span>
+              {isMyProfile && (
+                <div className="flex gap-3">
+                  <Panel {...panelProps} />
+                </div>
+              )}
+            </div>
+          )}
         </List.Heading>
 
         {folderId && (
-          <List.Item
-            Icon={Folder}
-            name=".."
-            actions={[]}
-            description=""
-            href=""
-          />
+          <List.Item Icon={Folder} name=".." href={previousFolder} />
+        )}
+
+        {!isContentLoading && !items.length && (
+          <div className="mt-8">
+            <div className="flex justify-center">
+              <img src="/empty-state.svg" />
+            </div>
+
+            <div className="text-center flex flex-col justify-center gap-3">
+              <h1 className="text-3xl">It's empty in here</h1>
+
+              <p className="text-gray-600 dark:text-gray-400 flex-wrap">
+                {isMyProfile ? (
+                  <>
+                    Get started by adding content to this folder.
+                    <p className="mb-4">
+                      You can add articles and other folders here.
+                    </p>
+                    <Panel {...panelProps} />
+                  </>
+                ) : (
+                  <>
+                    Oops... looks like the user forgot to add content in here :/
+                  </>
+                )}
+              </p>
+            </div>
+          </div>
         )}
 
         {isContentLoading
