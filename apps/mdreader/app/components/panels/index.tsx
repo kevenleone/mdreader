@@ -29,17 +29,15 @@ type PanelContentProps = {
   title: string;
 };
 
-const PanelContent: React.FC<PanelContentProps> = ({ children, title }) => {
-  return (
-    <>
-      <SheetHeader>
-        <SheetTitle className="capitalize">{title}</SheetTitle>
-      </SheetHeader>
+const PanelContent: React.FC<PanelContentProps> = ({ children, title }) => (
+  <>
+    <SheetHeader>
+      <SheetTitle className="capitalize">{title}</SheetTitle>
+    </SheetHeader>
 
-      {children}
-    </>
-  );
-};
+    {children}
+  </>
+);
 
 const Panel: React.FC<PanelProps> = ({
   defaultPanel,
@@ -53,7 +51,7 @@ const Panel: React.FC<PanelProps> = ({
 
   return (
     <>
-      <Button variant="secondary" onClick={() => setOpen(true)}>
+      <Button variant="default" onClick={() => setOpen(true)}>
         Add Content
       </Button>
 
