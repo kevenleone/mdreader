@@ -11,9 +11,9 @@ import clsx from 'clsx';
 import components, { MDXComponentsOptions } from './mdx-components';
 
 type MarkdownProps = {
-  params: MDXComponentsOptions;
-  maxWidth?: boolean;
   children: string;
+  maxWidth?: boolean;
+  params: MDXComponentsOptions;
 };
 
 const Markdown: React.FC<MarkdownProps> = ({

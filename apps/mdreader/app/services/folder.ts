@@ -4,10 +4,11 @@ import { SupabaseClient } from '@supabase/auth-helpers-remix';
 import { folderSchema } from '../schema';
 
 export type Folder = {
+  fileUrl: string;
+  folder_id?: number;
   id: number;
   name: string;
   slug: string;
-  fileUrl: string;
 };
 
 const folderService = (supabase: SupabaseClient) => ({

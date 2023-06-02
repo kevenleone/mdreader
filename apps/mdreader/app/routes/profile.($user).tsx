@@ -51,9 +51,9 @@ export async function loader({ params, request }: LoaderArgs) {
   }
 
   return {
-    profile,
     headers,
     origin: url.origin,
+    profile,
     session,
     username,
   };
