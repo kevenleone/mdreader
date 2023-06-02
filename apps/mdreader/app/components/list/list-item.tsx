@@ -38,7 +38,12 @@ const ListItem: React.FC<ListItemProps> = ({
     <ContextMenuWrapper.Main>
       <ContextMenuWrapper.Content>
         <li className="flex flex-col sm:flex-row justify-between items-baseline w-full border-b border-gray-200 dark:border-gray-700 py-3 transform hover:scale-[1.01] transition-all">
-          <Link to={href} aria-label={name} className="flex items-center">
+          <Link
+            aria-label={name}
+            className="flex items-center"
+            title={`Navigate to "${name}"`}
+            to={href}
+          >
             <div className="text-gray-300 dark:text-gray-400 text-left mr-6">
               <Icon className="bg-background" />
             </div>
