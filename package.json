@@ -11,7 +11,7 @@
     "eslint": "^7.32.0",
     "eslint-config-custom": "*",
     "prettier": "^2.5.1",
-    "turbo": "^1.9.3"
+    "turbo": "^1.10.1"
   },
   "name": "@mdreader/repo",
   "packageManager": "yarn@1.22.19",
