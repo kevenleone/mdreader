@@ -8,34 +8,33 @@
     "start": "remix build && remix-serve build"
   },
   "dependencies": {
+    "@hookform/resolvers": "^3.1.0",
     "@remix-run/css-bundle": "^1.16.1",
     "@remix-run/node": "^1.16.1",
     "@remix-run/react": "^1.16.1",
     "@remix-run/vercel": "^1.16.1",
     "@supabase/auth-helpers-remix": "^0.2.0",
-    "@vercel/node": "^2.10.3",
-    "isbot": "^3.6.8",
-    "remix-themes": "^1.2.1",
-    "satori": "^0.9.1",
-    "svg2img": "^1.0.0-beta.2",
-    "@hookform/resolvers": "^3.1.0",
     "@supabase/supabase-js": "^2.21.0",
     "@tailwindcss/typography": "^0.5.9",
-    "jotai": "^2.0.4",
-    "jotai-cache": "^0.3.0",
+    "@vercel/node": "^2.10.3",
+    "boring-avatars": "^1.7.0",
+    "isbot": "^3.6.8",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.43.9",
-    "react-router-dom": "^6.10.0",
-    "swr": "^2.1.5",
-    "zod": "^3.21.4",
     "react-markdown": "^8.0.7",
     "rehype-autolink-headings": "^6.1.1",
     "rehype-code-titles": "^1.2.0",
     "rehype-prism-plus": "^1.5.1",
     "rehype-slug": "^5.1.0",
     "remark-emoji": "^3.1.1",
-    "remark-gfm": "^3.0.1"
+    "remark-gfm": "^3.0.1",
+    "remix-themes": "^1.2.1",
+    "satori": "^0.9.1",
+    "svg2img": "^1.0.0-beta.2",
+    "swr": "^2.1.5",
+    "url-metadata": "^3.0.1",
+    "zod": "^3.21.4"
   },
   "devDependencies": {
     "@remix-run/dev": "^1.16.1",
@@ -52,6 +51,6 @@
   "engines": {
     "node": ">=14"
   },
-  "name": "@mdreader/remix",
+  "name": "@mdreader/mdreader",
   "version": "1.0.0"
 }
