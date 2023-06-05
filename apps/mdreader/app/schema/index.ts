@@ -44,3 +44,18 @@ export const folderSchema = z
     slug: z.string().optional(),
   })
   .transform((article) => ({ ...article, slug: slugify(article.name) }));
+
+
+export const knowledgeGroupSchema = z
+  .object({
+    description: z.string().max(250),
+    id: z.number().optional(),
+    image: z.string().optional(),
+    name: z.string().min(3).max(50),
+    private: z.boolean().default(false),
+    slug: z.string().optional(),
+  })
+  .transform((knowledgeGroup) => ({
+    ...knowledgeGroup,
+    slug: slugify(knowledgeGroup.name),
+  }));
