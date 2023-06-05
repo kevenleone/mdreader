@@ -1,0 +1,122 @@
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+  Separator,
+} from '@mdreader/interface';
+import { Link, useOutletContext } from '@remix-run/react';
+import { Link as LinkIcon, Flag as FlagIcon } from 'lucide-react';
+
+import KnowledgePanel from '~/components/panels/KnowledgePanel';
+import { useKnowledgeBases } from '~/hooks/useKnowledgeBase';
+import { KnowledgeGroup, Profiles } from '~/types';
+import { getInitials } from '~/utils';
+
+type KnowledgeCardProps = {
+  description: string;
+  image?: string;
+  owner: Profiles;
+  tags: string[];
+  url: string;
+};
+
+const KnowledgeCard: React.FC<KnowledgeCardProps> = ({
+  description,
+  image,
+  owner,
+  tags,
+  url,
+}) => (
+  <div className="max-w-xs  rounded overflow-hidden shadow-lg flex flex-col justify-between border p-4">
+    {image && <img alt={description} draggable={false} src={image} />}
+
+    <div className="py-4">
+      <p className="dark:text-gray-300 text-gray-800 text-base mb-2">
+        {description}
+      </p>
+
+      <a
+        className="text-sm text-blue-500"
+        href={url}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        {url}
+      </a>
+    </div>
+
+    {tags?.length && (
+      <div className="pt-4 pb-2">
+        {tags.map((tag, index) => (
+          <span
+            className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"
+            key={index}
+          >
+            #{tag}
+          </span>
+        ))}
+      </div>
+    )}
+
+    <div>
+      <Separator />
+
+      <div className="flex items-center gap-2 mt-2">
+        <Avatar>
+          <AvatarFallback>{getInitials(owner.name)}</AvatarFallback>
+          <AvatarImage src={owner.photo} />
+        </Avatar>
+
+        <Link className="w-full" to={`/profile/${owner.login}`}>
+          {owner.name}
+        </Link>
+
+        <div className="flex gap-2 cursor-pointer">
+          <LinkIcon size={16} />
+          <FlagIcon size={16} />
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
+type OutletContext = {
+  knowledgeGroup: KnowledgeGroup;
+};
+
+const KnowledgeGroup = () => {
+  const { knowledgeGroup } = useOutletContext<OutletContext>();
+  const { data, isLoading, mutate } = useKnowledgeBases(knowledgeGroup.id);
+
+  const knowledgeBases = data?.data ?? [];
+
+  return (
+    <div>
+      <div className="flex items-center  justify-between">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight">Knowledge Base</h1>
+          <p className="text-muted-foreground">
+            What about meet a new techonlogy every day? :)
+          </p>
+        </div>
+
+        <KnowledgePanel
+          mutateKnowledgeGroup={mutate as any}
+          knowledgeGroup={knowledgeGroup}
+        />
+      </div>
+
+      {isLoading ? (
+        <div>Loading...</div>
+      ) : (
+        <div className="mt-10 flex flex-wrap gap-2">
+          {knowledgeBases.map((knowledgeBase, index) => (
+            <KnowledgeCard key={index} {...knowledgeBase} />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default KnowledgeGroup;

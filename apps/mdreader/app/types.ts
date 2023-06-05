@@ -188,3 +188,44 @@ export interface URLMetadata {
   'theme-color': string;
   'color-scheme': string;
 }
+
+export interface KnowledgeGroup {
+  created_at: string;
+  description: string;
+  id: number;
+  image: string;
+  KnowledgeGroupUsers: KnowledgeGroupUser[];
+  name: string;
+  owner: string;
+  private: boolean;
+  slug: string;
+}
+
+export interface KnowledgeBase {
+  created_at: string;
+  description: string;
+  icon: any;
+  id: number;
+  image: string;
+  knowledge_group_id: number;
+  owner: Profiles;
+  slug: string;
+  tags: any;
+  url: string;
+}
+
+export interface KnowledgeGroupUser {
+  id: number;
+  user_id: string;
+  role: string;
+  knowledge_group_id: number;
+  created_at: string;
+  Profiles: Profiles;
+}
+
+export interface Profiles {
+  id: string;
+  login: string;
+  photo: string;
+  name: string;
+}
