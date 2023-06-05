@@ -8,10 +8,11 @@ const getSupabaseCredentials = (): {
   SUPABASE_URL: process.env.SUPABASE_URL as string,
 });
 
-export const getSupabaseServerClient = (request: Request) => {
+export const getSupabaseServerClient = (
+  request: Request,
+  response = new Response()
+) => {
   const { SUPABASE_KEY, SUPABASE_URL } = getSupabaseCredentials();
-
-  const response = new Response();
 
   return createServerClient(SUPABASE_URL, SUPABASE_KEY, {
     request,
