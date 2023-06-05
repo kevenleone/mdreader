@@ -16,6 +16,7 @@ type LayoutProps = {
 async function signInWithGitHub(supabase: SupabaseClient) {
   await supabase.auth.signInWithOAuth({
     provider: 'github',
+    options: { redirectTo: '/auth/callback' },
   });
 }
 
@@ -65,8 +66,8 @@ const Layout = ({ children }: LayoutProps) => {
         </Button>
       </ConfirmDialog>
 
-      <section className="container grid items-center gap-6 pb-8 pt-6 md:py-10">
-        <Suspense>{children}</Suspense>
+      <section className="container grid items-center gap-6 pb-8 pt-6">
+        {children}
       </section>
     </LayoutPage>
   );
