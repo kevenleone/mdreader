@@ -5,6 +5,7 @@ import { ErrorMessage } from './ErrorMessage';
 import { Field } from './Field';
 import { HelpMessage } from './HelpMessage';
 import { Input } from './Input';
+import { Switch } from './Switch';
 import { Label } from './Label';
 
 type FormProps = {
@@ -17,6 +18,7 @@ type FormChildrens = {
   Field: typeof Field;
   HelpMessage: typeof HelpMessage;
   Input: typeof Input;
+  Switch: typeof Switch;
   Label: typeof Label;
 };
 
@@ -35,6 +37,7 @@ const Form: React.FC<FormProps> & FormChildrens = ({
 Form.ErrorMessage = ErrorMessage;
 Form.Field = Field;
 Form.HelpMessage = HelpMessage;
+Form.Switch = Switch;
 Form.Input = Input;
 Form.Label = Label;
 
