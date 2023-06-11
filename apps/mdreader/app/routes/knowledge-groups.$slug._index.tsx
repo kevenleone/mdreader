@@ -5,22 +5,26 @@ import {
   Separator,
 } from '@mdreader/interface';
 import { Link, useOutletContext } from '@remix-run/react';
+import { Session } from '@supabase/supabase-js';
 import { Link as LinkIcon, Flag as FlagIcon } from 'lucide-react';
+import BlurhashFallback from '~/components/blurhash-fallback';
 
 import KnowledgePanel from '~/components/panels/KnowledgePanel';
 import { useKnowledgeBases } from '~/hooks/useKnowledgeBase';
-import { KnowledgeGroup, Profiles } from '~/types';
+import { KnowledgeGroup, Profile } from '~/types';
 import { getInitials } from '~/utils';
 
 type KnowledgeCardProps = {
+  blurhash?: string;
   description: string;
   image?: string;
-  owner: Profiles;
+  owner: Profile;
   tags: string[];
   url: string;
 };
 
 const KnowledgeCard: React.FC<KnowledgeCardProps> = ({
+  blurhash,
   description,
   image,
   owner,
@@ -28,7 +32,13 @@ const KnowledgeCard: React.FC<KnowledgeCardProps> = ({
   url,
 }) => (
   <div className="max-w-xs  rounded overflow-hidden shadow-lg flex flex-col justify-between border p-4">
-    {image && <img alt={description} draggable={false} src={image} />}
+    {image && (
+      <BlurhashFallback
+        blurhash={blurhash}
+        description={description}
+        src={image}
+      />
+    )}
 
     <div className="py-4">
       <p className="dark:text-gray-300 text-gray-800 text-base mb-2">
@@ -82,17 +92,18 @@ const KnowledgeCard: React.FC<KnowledgeCardProps> = ({
 
 type OutletContext = {
   knowledgeGroup: KnowledgeGroup;
+  session: Session | null;
 };
 
 const KnowledgeGroup = () => {
-  const { knowledgeGroup } = useOutletContext<OutletContext>();
+  const { knowledgeGroup, session } = useOutletContext<OutletContext>();
   const { data, isLoading, mutate } = useKnowledgeBases(knowledgeGroup.id);
 
   const knowledgeBases = data?.data ?? [];
 
   return (
     <div>
-      <div className="flex items-center  justify-between">
+      <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Knowledge Base</h1>
           <p className="text-muted-foreground">
@@ -100,10 +111,12 @@ const KnowledgeGroup = () => {
           </p>
         </div>
 
-        <KnowledgePanel
-          mutateKnowledgeGroup={mutate as any}
-          knowledgeGroup={knowledgeGroup}
-        />
+        {session && (
+          <KnowledgePanel
+            mutateKnowledgeGroup={mutate as any}
+            knowledgeGroup={knowledgeGroup}
+          />
+        )}
       </div>
 
       {isLoading ? (
