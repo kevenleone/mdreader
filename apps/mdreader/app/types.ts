@@ -189,12 +189,28 @@ export interface URLMetadata {
   'color-scheme': string;
 }
 
+export interface Article {
+  id: number;
+  featured: boolean;
+  name: string;
+  slug: string;
+  file_url: string;
+}
+
+export interface Folder {
+  file_url: string;
+  folder_id?: number;
+  id: number;
+  name: string;
+  slug: string;
+}
+
 export interface KnowledgeGroup {
   created_at: string;
   description: string;
   id: number;
   image: string;
-  KnowledgeGroupUsers: KnowledgeGroupUser[];
+  knowledge_group_users: KnowledgeGroupUser[];
   name: string;
   owner: string;
   private: boolean;
@@ -202,30 +218,31 @@ export interface KnowledgeGroup {
 }
 
 export interface KnowledgeBase {
+  blurhash?: string;
   created_at: string;
   description: string;
   icon: any;
   id: number;
   image: string;
   knowledge_group_id: number;
-  owner: Profiles;
+  owner: Profile;
   slug: string;
   tags: any;
   url: string;
 }
 
 export interface KnowledgeGroupUser {
-  id: number;
-  user_id: string;
-  role: string;
-  knowledge_group_id: number;
   created_at: string;
-  Profiles: Profiles;
+  id: number;
+  knowledge_group_id: number;
+  profile: Profile;
+  role: string;
+  user_id: string;
 }
 
-export interface Profiles {
+export interface Profile {
   id: string;
   login: string;
-  photo: string;
   name: string;
+  photo: string;
 }
