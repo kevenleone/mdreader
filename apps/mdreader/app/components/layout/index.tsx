@@ -16,7 +16,7 @@ type LayoutProps = {
 async function signInWithGitHub(supabase: SupabaseClient) {
   await supabase.auth.signInWithOAuth({
     provider: 'github',
-    // options: { redirectTo: '/auth/callback' },
+    options: { redirectTo: '/auth/callback' },
   });
 }
 

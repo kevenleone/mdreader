@@ -1,6 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@mdreader/interface';
 import { LoaderArgs, V2_MetaFunction } from '@remix-run/node';
 import { Link, useLoaderData } from '@remix-run/react';
+import { ProfileService } from '~/services/ProfileService';
 
 import { getSupabaseServerClient } from '~/services/supabase';
 import { getInitials } from '~/utils';
@@ -20,13 +21,15 @@ export const meta: V2_MetaFunction = ({ data: { origin } }) => {
 };
 
 export const loader = async ({ request }: LoaderArgs) => {
-  const client = await getSupabaseServerClient(request);
-
-  const { data: profiles } = await client.from('Profiles').select('*');
+  const supabase = await getSupabaseServerClient(request);
+  const profileService = new ProfileService({ supabase });
+  const profiles = await profileService.getAll({
+    order: { ascending: true, property: 'login' },
+  });
 
   return {
     origin: new URL(request.url).origin,
-    profiles: profiles ?? [],
+    profiles: profiles.data,
   };
 };
 

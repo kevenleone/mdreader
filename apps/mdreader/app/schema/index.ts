@@ -6,7 +6,7 @@ export const articleSchema = z
   .object({
     description: z.string().max(250),
     featured: z.boolean(),
-    fileUrl: z
+    file_url: z
       .string()
       .url({ message: 'Enter a valid Github URL for Article' })
       .refine(
@@ -16,9 +16,9 @@ export const articleSchema = z
         'It must be a valid Github URL'
       )
       .refine((fileURL) => {
-        const _fileUrl = fileURL.toLowerCase();
+        const _file_url = fileURL.toLowerCase();
 
-        return _fileUrl.endsWith('.md') || _fileUrl.endsWith('.markdown');
+        return _file_url.endsWith('.md') || _file_url.endsWith('.markdown');
       }, `Invalid file extension, it should be ['.md', '.markdown']`),
     folder_id: z.number().optional(),
     id: z.number().optional(),
@@ -47,6 +47,7 @@ export const folderSchema = z
 
 export const knowledgeSchema = z
   .object({
+    blurhash: z.string().optional(),
     description: z.string().min(15).max(250),
     id: z.number().optional(),
     image: z.string().optional(),
