@@ -11,7 +11,7 @@ import useFolderAndArticleActions from '~/hooks/useFolderAndArticleActions';
 import { useFolders } from '~/hooks/useFolders';
 import useSession from '~/hooks/useSession';
 import useUserId from '~/hooks/useUserId';
-import { Folder as IFolder } from '~/services/folder';
+import { Folder as IFolder } from '~/types';
 
 const colors = [
   'from-[#D8B4FE] to-[#818CF8]',
@@ -37,16 +37,19 @@ const MyProfile = () => {
   };
 
   const {
-    data: articles = [],
+    data: articlesData,
     mutate: mutateArticles,
     ...articlesProps
   } = useArticles(contentProps);
 
   const {
-    data: folders = [],
+    data: foldersData,
     mutate: mutateFolders,
     ...folderProps
   } = useFolders(contentProps);
+
+  const articles = articlesData?.data ?? [];
+  const folders = foldersData?.data ?? [];
 
   const isContentLoading = articlesProps.isLoading || folderProps.isLoading;
 

@@ -77,8 +77,8 @@ export const loader = async (props: LoaderArgs) => {
   const [article] = data || [];
 
   if (article) {
-    const { fileUrl } = article;
-    const githubUserRepo = getUserAndRepoByRawUri(fileUrl);
+    const { file_url } = article;
+    const githubUserRepo = getUserAndRepoByRawUri(file_url);
 
     githubDetails.githubUserRepo = githubUserRepo;
   }
@@ -104,13 +104,13 @@ const Preview = () => {
     data: { article, githubUserRepo },
   } = useLoaderData<ReturnType<typeof loader>>();
 
-  const { data: markdown, isLoading } = useFetch(article.fileUrl, undefined, {
+  const { data: markdown, isLoading } = useFetch(article.file_url, undefined, {
     parseAs: 'text',
   });
 
   const { data: commit1 = [] } = useSWR(
     {
-      key: `/${article.fileUrl}/commits`,
+      key: `/${article.file_url}/commits`,
       token: session?.provider_token,
       ...githubUserRepo,
     },

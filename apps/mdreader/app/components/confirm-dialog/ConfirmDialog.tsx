@@ -11,6 +11,8 @@ import {
 } from '@mdreader/interface';
 import { ReactNode } from 'react';
 
+const noop = () => null;
+
 type ConfirmDialogProps = {
   children?: ReactNode;
   description?: string;
@@ -24,7 +26,7 @@ type ConfirmDialogProps = {
 const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
   children,
   description,
-  onCancel,
+  onCancel = noop,
   onConfirm,
   open,
   title = 'Are you absolutely sure?',
@@ -40,7 +42,7 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
         </AlertDialogHeader>
         {children}
         <AlertDialogFooter>
-          {onCancel && (
+          {trigger && (
             <AlertDialogCancel onClick={onCancel}>Cancel</AlertDialogCancel>
           )}
           {onConfirm && (
