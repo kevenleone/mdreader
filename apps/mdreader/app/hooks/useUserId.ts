@@ -2,30 +2,28 @@ import { useParams } from '@remix-run/react';
 import { useCallback } from 'react';
 import useSWR from 'swr';
 
-import useSupabase from './useSupabase';
 import useSession from './useSession';
+import { useProfileService } from './useProfiles';
 
 const useUserId = () => {
   const { user } = useParams();
-  const client = useSupabase();
   const mySession = useSession();
+
+  const profileService = useProfileService();
 
   const getUserId = useCallback(async () => {
     let userId = '';
 
     if (user) {
-      const { data } = await client
-        .from('Profiles')
-        .select('*')
-        .filter('login', 'eq', user);
+      const data = await profileService.getOne({
+        filters: [{ operator: 'eq', property: 'login', value: user }],
+      });
 
-      if (data?.length) {
-        userId = data[0].id;
+      if (data) {
+        userId = data.id;
       }
-    } else {
-      if (mySession?.user.id) {
-        userId = mySession.user.id;
-      }
+    } else if (mySession?.user.id) {
+      userId = mySession.user.id;
     }
 
     return userId;
