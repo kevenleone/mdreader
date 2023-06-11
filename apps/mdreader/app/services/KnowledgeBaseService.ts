@@ -11,7 +11,7 @@ export class KnowledgeBaseService extends SupabaseService<
   constructor(props: Omit<SupabaseServiceConstructor, 'table'>) {
     super({
       ...props,
-      table: 'KnowledgeBase',
+      table: 'knowledge_base',
     });
   }
 }
