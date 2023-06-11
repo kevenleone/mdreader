@@ -1,24 +1,23 @@
-import { useToast } from '@mdreader/interface';
 import { File, Folder } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';
+import { useToast } from '@mdreader/interface';
 import { z } from 'zod';
 
 import { articleSchema, folderSchema } from '~/schema';
-import { articleService } from '~/services/article';
-import { folderService } from '~/services/folder';
-import useSupabase from './useSupabase';
+import { useArticleService } from './useArticles';
+import { useFolderService } from './useFolders';
 
 type Props = {
   articles: any[];
+  canModify: boolean;
   folders: any[];
   mutateArticles: any;
   mutateFolders: any;
-  canModify: boolean;
 };
 
 type ConfirmDialogState = {
-  open: boolean;
   onConfirm: () => void;
+  open: boolean;
 };
 
 type ArticleForm = z.infer<typeof articleSchema>;
@@ -36,9 +35,8 @@ const useFolderAndArticleActions = ({
   mutateFolders,
   canModify,
 }: Props) => {
-  const client = useSupabase();
-  const _articleService = useMemo(() => articleService(client), [client]);
-  const _folderService = useMemo(() => folderService(client), [client]);
+  const _articleService = useArticleService();
+  const _folderService = useFolderService();
 
   const { toast } = useToast();
 
@@ -70,7 +68,7 @@ const useFolderAndArticleActions = ({
       };
 
       return async (form: ArticleForm | FolderForm) => {
-        const { error, data } = await properties.service.store(form as any);
+        const { error, data } = await properties.service.upsert(form as any);
 
         if (error) {
           console.error(error);

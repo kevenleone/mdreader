@@ -1,7 +1,7 @@
-import useSWR from 'swr';
 import { useMemo } from 'react';
+import useSWR from 'swr';
 
-import { folderService } from '../services/folder';
+import { FolderService } from '~/services/FolderService';
 import useSupabase from './useSupabase';
 
 type Props = {
@@ -9,24 +9,45 @@ type Props = {
   folderId: number | null;
 };
 
-export const useFolder = (folderId?: number) => {
+export const useFolderService = () => {
   const client = useSupabase();
-  const service = useMemo(() => folderService(client), [client]);
+
+  const service = useMemo(
+    () => new FolderService({ supabase: client }),
+    [client]
+  );
+
+  return service;
+};
+
+export const useFolder = (folderId?: number) => {
+  const service = useFolderService();
 
   return useSWR({ folderId, key: 'folder' }, folderId ? service.getOne : null);
 };
 
-export const useFolders = (props: Props) => {
-  const client = useSupabase();
-  const service = useMemo(() => folderService(client), [client]);
+export const useFolders = ({ folderId, userId }: Props) => {
+  const service = useFolderService();
 
-  return useSWR(
-    props.userId
-      ? {
-          ...props,
-          key: 'folders',
-        }
-      : null,
-    service.getAll
+  return useSWR(userId ? `/folders/${userId}/${folderId ?? 0}` : null, () =>
+    service.getAll({
+      filters: [
+        {
+          operator: folderId ? 'eq' : 'is',
+          property: 'folder_id',
+          value: folderId,
+        },
+        {
+          operator: 'eq',
+          property: 'user_id',
+          value: userId,
+        },
+      ],
+      order: {
+        property: 'name',
+        ascending: true,
+      },
+      select: '*, folder(*)',
+    })
   );
 };
