@@ -5,27 +5,38 @@ import { ArrowLeft } from 'lucide-react';
 
 import { SidebarNav } from '~/components/sidebar-nav';
 import { useKnowledgeGroup } from '~/hooks/useKnowledgeGroup';
-
-const sidebarNavItems = [
-  {
-    title: 'Knowledge Base',
-    href: '',
-  },
-
-  {
-    title: 'Group Members',
-    href: 'members',
-  },
-  {
-    title: 'Settings',
-    href: 'settings',
-  },
-];
+import { useMemo } from 'react';
+import useSession from '~/hooks/useSession';
 
 const KnowledgeGroupOutlet = () => {
   const { slug } = useParams();
+  const session = useSession();
 
   const { data: knowledgeGroup } = useKnowledgeGroup(slug as string);
+
+  const sidebarNavItems = useMemo(() => {
+    const sidebarNavItems = [
+      {
+        title: 'Knowledge Base',
+        href: '',
+      },
+    ];
+
+    if (session) {
+      sidebarNavItems.push(
+        {
+          title: 'Group Members',
+          href: 'members',
+        },
+        {
+          title: 'Settings',
+          href: 'settings',
+        }
+      );
+    }
+
+    return sidebarNavItems;
+  }, []);
 
   if (!knowledgeGroup) {
     return null;
@@ -63,7 +74,7 @@ const KnowledgeGroupOutlet = () => {
         </aside>
 
         <div className="flex-1">
-          <Outlet context={{ knowledgeGroup }} />
+          <Outlet context={{ knowledgeGroup, session }} />
         </div>
       </div>
     </div>
