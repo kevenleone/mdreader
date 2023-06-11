@@ -1,13 +1,14 @@
-import Form from '../../components/form';
-import { articleSchema } from '../../schema';
-import { Folder } from '../../services/folder';
-import { slugify } from '../../utils/slugify';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Button } from '@mdreader/interface';
-import { useOutletContext } from '@remix-run/react';
 import { useForm } from 'react-hook-form';
+import { useOutletContext } from '@remix-run/react';
 import { z } from 'zod';
+import { Button } from '@mdreader/interface';
+import { zodResolver } from '@hookform/resolvers/zod';
+
+import { articleSchema } from '../../schema';
+import { Folder } from '~/types';
 import { OnSaveArticleAndFolder } from '~/hooks/useFolderAndArticleActions';
+import { slugify } from '../../utils/slugify';
+import Form from '../../components/form';
 
 type OutletContext = {
   folder?: Folder;
@@ -34,9 +35,9 @@ export const ArticlePanelForm: React.FC<ArticlePanelFormProps> = ({
   });
 
   const {
+    formState: { isSubmitting },
     handleSubmit,
     watch,
-    formState: { isSubmitting },
   } = articleForm;
 
   const slug = slugify(watch('name') ?? '');
@@ -65,9 +66,9 @@ export const ArticlePanelForm: React.FC<ArticlePanelFormProps> = ({
       </Form.Field>
 
       <Form.Field>
-        <Form.Label htmlFor="fileUrl">File URL</Form.Label>
-        <Form.Input name="fileUrl" type="text" />
-        <Form.ErrorMessage field="fileUrl" />
+        <Form.Label htmlFor="file_url">File URL</Form.Label>
+        <Form.Input name="file_url" type="text" />
+        <Form.ErrorMessage field="file_url" />
       </Form.Field>
 
       {folder && (

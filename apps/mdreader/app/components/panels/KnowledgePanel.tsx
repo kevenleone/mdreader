@@ -18,6 +18,7 @@ import { useDebounce } from '~/hooks/useDebounce';
 import { KnowledgeGroup, URLMetadata } from '~/types';
 import MetadataPreview from '../metadata-preview';
 import { useKnowledgeBaseService } from '~/hooks/useKnowledgeBase';
+import { encodeImageToBlurhash } from '~/utils/blurhash';
 
 type KnowledgeForm = z.infer<typeof knowledgeSchema>;
 
@@ -46,14 +47,15 @@ export const KnowledgePanelForm: React.FC<KnowledgePanelFormProps> = ({
 
   const slug = slugify(watch('description') ?? '');
   const url = watch('url');
+
   const debouncedValue = useDebounce(url, 1000);
 
-  const { data: metadata } = useSWR(
+  const { data: metadata } = useSWR<URLMetadata>(
     errors?.url || !debouncedValue ? null : `/metadata/${debouncedValue}`,
     async () => {
       const response = await fetch(`/api/metadata?url=${debouncedValue}`);
 
-      return response.json() as Promise<URLMetadata>;
+      return response.json();
     }
   );
 
@@ -112,11 +114,27 @@ const KnowledgePanel: React.FC<KnowledgePanelProps> = ({
   const onSave = async (data: KnowledgeForm & { metadata?: URLMetadata }) => {
     const metadata = data.metadata;
     const image = metadata?.image || metadata?.['og:image'];
+    let blurhash;
+
+    if (image) {
+      const { blurhash: encodedBlurHash, error } = await encodeImageToBlurhash(
+        image
+      );
+
+      if (encodedBlurHash) {
+        blurhash = encodedBlurHash;
+      }
+
+      if (error) {
+        console.error('Blurhash error: ', error);
+      }
+    }
 
     delete data.metadata;
 
     const response = await knowledgeBaseService.upsert({
       ...data,
+      blurhash,
       image,
       knowledge_group_id: knowledgeGroup.id,
     });

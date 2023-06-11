@@ -1,5 +1,4 @@
 import { folderSchema } from '../../schema';
-import { Folder } from '../../services/folder';
 import { slugify } from '../../utils/slugify';
 import Form from '../form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -8,6 +7,7 @@ import { useOutletContext } from '@remix-run/react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { OnSaveArticleAndFolder } from '~/hooks/useFolderAndArticleActions';
+import { Folder } from '~/types';
 
 type OutletContext = {
   folder?: Folder;
