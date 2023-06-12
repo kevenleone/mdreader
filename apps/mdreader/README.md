@@ -1,34 +1,18 @@
-# Welcome to Remix!
+# :bookmark: MD Reader - Web Application
 
-- [Remix Docs](https://remix.run/docs)
+### :blue_book: Description
 
-## Deployment
+MD Reader is a web application built using React, Remix, and Supabase. It incorporates the following technologies:
 
-After having run the `create-remix` command and selected "Vercel" as a deployment target, you only need to [import your Git repository](https://vercel.com/new) into Vercel, and it will be deployed.
+* **Blurhash** ->  Provides a compact representation of a placeholder for an image.
+* **BoringAvatars** ->  Offers an avatar generator playground.
+* **React-Hook-Form** -> Simplifies React forms validation.
+* **SWR** ->  Provides React Hooks for data fetching.
+* **Tailwind** -> Tailwind CSS is a utility-first CSS.
+* **Zod** -> Facilitates schema declaration and validation.
 
-If you'd like to avoid using a Git repository, you can also deploy the directory by running [Vercel CLI](https://vercel.com/cli):
+### :exclamation: Purpose:
 
-```sh
-npm i -g vercel
-vercel
-```
+MD Reader aims to enhance user experience by enabling them to save, organize, and share valuable content from GitHub and knowledge bases. It serves as a convenient repository for links that users may find interesting and wish to share with their team.
 
-It is generally recommended to use a Git repository, because future commits will then automatically be deployed by Vercel, through its [Git Integration](https://vercel.com/docs/concepts/git).
-
-## Development
-
-To run your Remix app locally, make sure your project's local dependencies are installed:
-
-```sh
-npm install
-```
-
-Afterwards, start the Remix development server like so:
-
-```sh
-npm run dev
-```
-
-Open up [http://localhost:3000](http://localhost:3000) and you should be ready to go!
-
-If you're used to using the `vercel dev` command provided by [Vercel CLI](https://vercel.com/cli) instead, you can also use that, but it's not needed.
+I chose Remix for its route system, which is similar to react-router-dom. Leveraging my experience with react-router-dom, I found Remix to be an easier and more streamlined option for transitioning from client-side to server-side rendering.

@@ -4,9 +4,7 @@
 
 ## Description
 
-Save and organize your favorites markdown files in a single storage and share with friends.
-
-The application was designed to be Client Side (Vite) and leverage Supabase for Auth and Storage, still considering to move to SSR approach.
+Save and organize your favorites markdown files in a single storage and share with friends and team.
 
 ## :zap: Installation and Instructions
 
@@ -16,16 +14,16 @@ The application was designed to be Client Side (Vite) and leverage Supabase for 
 
 - apps/mdreader
   - Main application using Vite
-- packages/md
+- packages/markdown
   - Component Library responsible for rendering Articles `(.md files)`
   - Renderer made with rehype and remark libraries.
-- packages/ui
+- packages/interface
   - Reusable Components provided by [shadcn/ui](https://github.com/shadcn/ui).
 
 ```
 apps/mdreader
-packages/md
-packages/ui
+packages/markdown
+packages/interface
 ```
 
 ## Motivation
