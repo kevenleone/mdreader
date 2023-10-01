@@ -1,4 +1,4 @@
-import { Link, Outlet, useParams } from '@remix-run/react';
+import { Link, Outlet, V2_MetaFunction, useParams } from '@remix-run/react';
 import { Separator } from '@mdreader/interface';
 import BoringAvatar from 'boring-avatars';
 import { ArrowLeft } from 'lucide-react';
@@ -7,6 +7,38 @@ import { SidebarNav } from '~/components/sidebar-nav';
 import { useKnowledgeGroup } from '~/hooks/useKnowledgeGroup';
 import { useMemo } from 'react';
 import useSession from '~/hooks/useSession';
+import { LoaderArgs } from '@remix-run/node';
+import { getSupabaseServerClient } from '~/services/supabase';
+import { KnowledgeGroupService } from '~/services/KnowledgeGroupService';
+
+export const meta: V2_MetaFunction = ({ data: { knowledgeGroup, origin } }) => {
+  return [
+    { title: `${knowledgeGroup.name} | MD Reader` },
+    {
+      name: 'description',
+      content: knowledgeGroup.description,
+    },
+    {
+      property: 'og:image',
+      content: `${origin}/api/og?template=site&title=${knowledgeGroup.name} | MD Reader&description=${knowledgeGroup.description}`,
+    },
+  ];
+};
+
+export const loader = async ({ request, params }: LoaderArgs) => {
+  const supabase = await getSupabaseServerClient(request);
+
+  const knowledgeGroupService = new KnowledgeGroupService({ supabase });
+
+  const knowledgeGroup = await knowledgeGroupService.getOne({
+    filters: [{ operator: 'eq', property: 'slug', value: params.slug }],
+  });
+
+  return {
+    knowledgeGroup,
+    origin: new URL(request.url).origin,
+  };
+};
 
 const KnowledgeGroupOutlet = () => {
   const { slug } = useParams();
@@ -20,23 +52,21 @@ const KnowledgeGroupOutlet = () => {
         title: 'Knowledge Base',
         href: '',
       },
+      {
+        title: 'Group Members',
+        href: 'members',
+      },
     ];
 
-    if (session) {
-      sidebarNavItems.push(
-        {
-          title: 'Group Members',
-          href: 'members',
-        },
-        {
-          title: 'Settings',
-          href: 'settings',
-        }
-      );
+    if (knowledgeGroup?.owner.id === session?.user.id) {
+      sidebarNavItems.push({
+        title: 'Settings',
+        href: 'settings',
+      });
     }
 
     return sidebarNavItems;
-  }, []);
+  }, [knowledgeGroup]);
 
   if (!knowledgeGroup) {
     return null;
@@ -57,9 +87,9 @@ const KnowledgeGroupOutlet = () => {
 
         {knowledgeGroup?.image ? (
           <img
+            alt={knowledgeGroup.description}
             className="w-16 h-16"
             src={knowledgeGroup.image}
-            alt={knowledgeGroup.description}
           />
         ) : (
           <BoringAvatar variant="bauhaus" name={knowledgeGroup.name} />

@@ -8,6 +8,7 @@ import { Link, useOutletContext } from '@remix-run/react';
 import { Session } from '@supabase/supabase-js';
 import { Link as LinkIcon, Flag as FlagIcon } from 'lucide-react';
 import BlurhashFallback from '~/components/blurhash-fallback';
+import EmptyState from '~/components/empty-state';
 
 import KnowledgePanel from '~/components/panels/KnowledgePanel';
 import { useKnowledgeBases } from '~/hooks/useKnowledgeBase';
@@ -34,6 +35,7 @@ const KnowledgeCard: React.FC<KnowledgeCardProps> = ({
   <div className="max-w-xs  rounded overflow-hidden shadow-lg flex flex-col justify-between border p-4">
     {image && (
       <BlurhashFallback
+        blurHashProps={{}}
         blurhash={blurhash}
         description={description}
         src={image}
@@ -100,6 +102,7 @@ const KnowledgeGroup = () => {
   const { data, isLoading, mutate } = useKnowledgeBases(knowledgeGroup.id);
 
   const knowledgeBases = data?.data ?? [];
+  const hasKnowledgeBase = knowledgeBases.length > 0;
 
   return (
     <div>
@@ -111,7 +114,7 @@ const KnowledgeGroup = () => {
           </p>
         </div>
 
-        {session && (
+        {session && hasKnowledgeBase && (
           <KnowledgePanel
             mutateKnowledgeGroup={mutate as any}
             knowledgeGroup={knowledgeGroup}
@@ -121,11 +124,20 @@ const KnowledgeGroup = () => {
 
       {isLoading ? (
         <div>Loading...</div>
-      ) : (
+      ) : hasKnowledgeBase ? (
         <div className="mt-10 flex flex-wrap gap-2">
           {knowledgeBases.map((knowledgeBase, index) => (
             <KnowledgeCard key={index} {...knowledgeBase} />
           ))}
+        </div>
+      ) : (
+        <div className="flex justify-center items-center min-h-[500px]">
+          <EmptyState className="mt-10">
+            <KnowledgePanel
+              mutateKnowledgeGroup={mutate as any}
+              knowledgeGroup={knowledgeGroup}
+            />
+          </EmptyState>
         </div>
       )}
     </div>
