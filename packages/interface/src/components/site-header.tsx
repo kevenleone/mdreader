@@ -16,6 +16,10 @@ export const siteConfig = {
       title: 'Users',
       href: '/users',
     },
+    {
+      title: 'Knowledge Groups',
+      href: '/knowledge-groups',
+    },
   ],
   links: {
     github: 'https://github.com/kevenleone/mdreader',
