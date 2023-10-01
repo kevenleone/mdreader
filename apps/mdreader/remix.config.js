@@ -1,13 +1,13 @@
 /** @type {import('@remix-run/dev').AppConfig} */
 module.exports = {
-  ignoredRouteFiles: ['**/.*', '**/*.test.{js,jsx,ts,tsx}'],
   appDirectory: 'app',
-  future: {
-    v2_errorBoundary: true,
-    v2_meta: true,
-    v2_normalizeFormMethod: true,
-    v2_routeConvention: true,
+  browserNodeBuiltinsPolyfill: {
+    modules: { process: true, path: true, url: true },
   },
+  future: {
+    v2_meta: true,
+  },
+  ignoredRouteFiles: ['**/.*', '**/*.test.{js,jsx,ts,tsx}'],
   postcss: true,
   serverModuleFormat: 'cjs',
   tailwind: true,

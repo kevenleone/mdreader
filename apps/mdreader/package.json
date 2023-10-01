@@ -4,14 +4,14 @@
   "scripts": {
     "build": "remix build",
     "dev": "remix dev",
-    "typecheck": "tsc",
-    "start": "remix build && remix-serve build"
+    "start": "remix build && remix-serve build",
+    "typecheck": "tsc"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.1.0",
-    "@remix-run/css-bundle": "^1.16.1",
-    "@remix-run/node": "^1.16.1",
-    "@remix-run/react": "^1.16.1",
+    "@remix-run/css-bundle": "^2.0.1",
+    "@remix-run/node": "^2.0.1",
+    "@remix-run/react": "^2.0.1",
     "@remix-run/vercel": "^1.16.1",
     "@supabase/auth-helpers-remix": "^0.2.0",
     "@supabase/supabase-js": "^2.21.0",
@@ -40,9 +40,9 @@
     "zod": "^3.21.4"
   },
   "devDependencies": {
-    "@remix-run/dev": "^1.16.1",
+    "@remix-run/dev": "^2.0.1",
     "@remix-run/eslint-config": "^1.16.1",
-    "@remix-run/serve": "^1.16.1",
+    "@remix-run/serve": "2.0.1",
     "@types/react": "^18.0.35",
     "@types/react-dom": "^18.0.11",
     "autoprefixer": "^10.4.14",

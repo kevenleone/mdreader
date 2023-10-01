@@ -1,4 +1,4 @@
-import { LoaderArgs, V2_MetaFunction } from '@remix-run/node';
+import { LoaderFunctionArgs, MetaArgs, MetaFunction } from '@remix-run/node';
 import {
   Links,
   Meta,
@@ -14,13 +14,11 @@ import { getSupabaseServerSession } from '~/services/supabase';
 import { GithubCommit } from '~/types';
 import Article from '~/components/article';
 import useFetch from '~/hooks/useFetch';
+import { ArticleService } from '~/services/ArticleService';
 
-export const meta: V2_MetaFunction<ReturnType<typeof loader>> = ({
-  data,
-  location,
-}) => {
-  const article = data.data?.article;
-  const origin = data.origin as string;
+export const meta: MetaFunction = ({ data, location }) => {
+  const article = (data as any).data?.article;
+  const origin = (data as any).origin as string;
   const [, username] = location.pathname.split('/').filter(Boolean);
 
   if (!article) {
@@ -53,7 +51,7 @@ export const meta: V2_MetaFunction<ReturnType<typeof loader>> = ({
   ];
 };
 
-export const loader = async (props: LoaderArgs) => {
+export const loader = async (props: LoaderFunctionArgs) => {
   const { slug: slugWithId = '' } = props.params;
   const [id, ...slug] = slugWithId.split('-');
   const url = new URL(props.request.url);
@@ -68,13 +66,15 @@ export const loader = async (props: LoaderArgs) => {
     markdown: '',
   };
 
-  const { data } = await client
-    .from('Articles')
-    .select('*')
-    .filter('id', 'eq', Number(id))
-    .filter('slug', 'eq', slug.join('-'));
+  const articleService = new ArticleService({ supabase: client });
 
-  const [article] = data || [];
+  const article = await articleService.getOne({
+    filters: [
+      { operator: 'eq', property: 'id', value: Number(id) },
+      { operator: 'eq', property: 'slug', value: slug.join('-') },
+    ],
+    select: '*',
+  });
 
   if (article) {
     const { file_url } = article;
@@ -104,7 +104,7 @@ const Preview = () => {
     data: { article, githubUserRepo },
   } = useLoaderData<ReturnType<typeof loader>>();
 
-  const { data: markdown, isLoading } = useFetch(article.file_url, undefined, {
+  const { data: markdown, isLoading } = useFetch(article?.file_url, undefined, {
     parseAs: 'text',
   });
 
