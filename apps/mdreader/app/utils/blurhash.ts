@@ -3,10 +3,13 @@ import { encode } from 'blurhash';
 const getImageByURL = async (src: string): Promise<HTMLImageElement> =>
   new Promise((resolve, reject) => {
     const img = new Image();
-    img.crossOrigin = 'anonymous';
     img.src = src;
     img.onload = () => resolve(img);
-    img.onerror = (...args) => reject(args);
+    img.onerror = (...args) => {
+      console.log('Error...', args);
+      reject(args);
+    };
+    img.crossOrigin = 'anonymous';
   });
 
 const getImageData = (image: HTMLImageElement) => {

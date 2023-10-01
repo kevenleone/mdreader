@@ -6,10 +6,12 @@ type BlurhashFallbackProps = {
   blurhash?: string;
   description: string;
   src: string;
+  blurHashProps: Partial<typeof Blurhash.defaultProps>
 };
 
 const BlurhashFallback: React.FC<BlurhashFallbackProps> = ({
   blurhash,
+  blurHashProps,
   description,
   src,
 }) => {
@@ -42,6 +44,7 @@ const BlurhashFallback: React.FC<BlurhashFallbackProps> = ({
             resolutionX={32}
             resolutionY={32}
             width={286}
+            {...blurHashProps}
           />
         </div>
       )}

@@ -48,9 +48,10 @@ export const folderSchema = z
 export const knowledgeSchema = z
   .object({
     blurhash: z.string().optional(),
-    description: z.string().min(15).max(250),
+    description: z.string().min(5).max(250),
     id: z.number().optional(),
     image: z.string().optional(),
+    tags: z.array(z.string()),
     knowledge_group_id: z.number().optional(),
     slug: z.string().optional(),
     url: z.string().url(),
@@ -64,7 +65,7 @@ export const knowledgeGroupSchema = z
   .object({
     description: z.string().max(250),
     id: z.number().optional(),
-    image: z.string().optional(),
+    image: z.string().optional().nullable(),
     name: z.string().min(3).max(50),
     private: z.boolean().default(false),
     slug: z.string().optional(),
