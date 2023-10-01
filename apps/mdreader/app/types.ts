@@ -212,7 +212,7 @@ export interface KnowledgeGroup {
   image: string;
   knowledge_group_users: KnowledgeGroupUser[];
   name: string;
-  owner: string;
+  owner: Profile;
   private: boolean;
   slug: string;
 }

@@ -12,6 +12,7 @@ import { useFolders } from '~/hooks/useFolders';
 import useSession from '~/hooks/useSession';
 import useUserId from '~/hooks/useUserId';
 import { Folder as IFolder } from '~/types';
+import EmptyState from '~/components/empty-state';
 
 const colors = [
   'from-[#D8B4FE] to-[#818CF8]',
@@ -51,6 +52,8 @@ const MyProfile = () => {
   const articles = articlesData?.data ?? [];
   const folders = foldersData?.data ?? [];
 
+  const isContentValidating =
+    articlesProps.isValidating || folderProps.isValidating;
   const isContentLoading = articlesProps.isLoading || folderProps.isLoading;
 
   const { confirmDialogProps, panelProps, items } = useFolderAndArticleActions({
@@ -109,32 +112,20 @@ const MyProfile = () => {
           <List.Item Icon={Folder} name=".." href={previousFolder} />
         )}
 
-        {!isContentLoading && !items.length && (
-          <div className="mt-8">
-            <div className="flex justify-center">
-              <img src="/empty-state.svg" />
-            </div>
-
-            <div className="text-center flex flex-col justify-center gap-3">
-              <h1 className="text-3xl">It's empty in here</h1>
-
-              <p className="text-gray-600 dark:text-gray-400 flex-wrap">
-                {isMyProfile ? (
-                  <>
-                    Get started by adding content to this folder.
-                    <p className="mb-4">
-                      You can add articles and other folders here.
-                    </p>
-                    <Panel {...panelProps} />
-                  </>
-                ) : (
-                  <>
-                    Oops... looks like the user forgot to add content in here :/
-                  </>
-                )}
-              </p>
-            </div>
-          </div>
+        {!isContentValidating && !items.length && (
+          <EmptyState className="mt-8">
+            {isMyProfile ? (
+              <>
+                Get started by adding content to this folder.
+                <p className="mb-4">
+                  You can add articles and other folders here.
+                </p>
+                <Panel {...panelProps} />
+              </>
+            ) : (
+              <>Oops... looks like the user forgot to add content in here :/</>
+            )}
+          </EmptyState>
         )}
 
         {isContentLoading

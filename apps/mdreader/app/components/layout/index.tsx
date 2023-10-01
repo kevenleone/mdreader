@@ -2,7 +2,7 @@ import { useNavigate, Link } from '@remix-run/react';
 import { Button, Layout as LayoutPage } from '@mdreader/interface';
 import { Github } from 'lucide-react';
 import { SupabaseClient } from '@supabase/auth-helpers-remix';
-import { Suspense, useState } from 'react';
+import { useState } from 'react';
 import { useTheme, Theme } from 'remix-themes';
 
 import { ConfirmDialog } from '../../components/confirm-dialog/ConfirmDialog';
