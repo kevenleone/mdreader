@@ -25,6 +25,7 @@
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.43.9",
     "react-markdown": "^8.0.7",
+    "react-tag-input-component": "^2.0.2",
     "rehype-autolink-headings": "^6.1.1",
     "rehype-code-titles": "^1.2.0",
     "rehype-prism-plus": "^1.5.1",

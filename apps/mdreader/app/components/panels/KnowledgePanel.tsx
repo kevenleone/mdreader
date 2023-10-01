@@ -10,6 +10,7 @@ import { useState } from 'react';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import useSWR, { KeyedMutator } from 'swr';
+import { TagsInput } from 'react-tag-input-component';
 
 import Form from '../../components/form';
 import { knowledgeSchema } from '../../schema';
@@ -42,6 +43,7 @@ export const KnowledgePanelForm: React.FC<KnowledgePanelFormProps> = ({
   const {
     handleSubmit,
     watch,
+    setValue,
     formState: { isSubmitting, errors },
   } = knowledgeForm;
 
@@ -80,6 +82,16 @@ export const KnowledgePanelForm: React.FC<KnowledgePanelFormProps> = ({
         <Form.Label htmlFor="slug">Slug</Form.Label>
         <Form.Input name="slug" type="text" disabled value={slug} />
         <Form.ErrorMessage field="slug" />
+      </Form.Field>
+
+      <Form.Field>
+        <Form.Label>Tags</Form.Label>
+
+        <TagsInput
+          name="fruits"
+          onChange={(values) => setValue('tags', values)}
+          value={watch('tags')}
+        />
       </Form.Field>
 
       {metadata && <MetadataPreview {...metadata} />}

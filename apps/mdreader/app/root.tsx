@@ -21,6 +21,7 @@ import {
 
 import { createBrowserClient } from '@supabase/auth-helpers-remix';
 
+import './index.css';
 import '@mdreader/markdown/src/styles/md.css';
 import '@mdreader/interface/src/styles/ui.css';
 
