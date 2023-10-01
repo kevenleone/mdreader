@@ -1,8 +1,7 @@
 import { PassThrough } from 'stream';
 import { renderToPipeableStream } from 'react-dom/server';
 import { RemixServer } from '@remix-run/react';
-import { Response } from '@remix-run/node';
-import type { EntryContext, Headers } from '@remix-run/node';
+import type { EntryContext } from '@remix-run/node';
 import isbot from 'isbot';
 
 const ABORT_DELAY = 5000;
@@ -29,7 +28,7 @@ export default function handleRequest(
           responseHeaders.set('Content-Type', 'text/html');
 
           resolve(
-            new Response(body, {
+            new Response(body as any, {
               status: didError ? 500 : responseStatusCode,
               headers: responseHeaders,
             })
