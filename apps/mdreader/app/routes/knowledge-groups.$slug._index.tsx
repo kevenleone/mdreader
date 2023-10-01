@@ -12,7 +12,7 @@ import EmptyState from '~/components/empty-state';
 
 import KnowledgePanel from '~/components/panels/KnowledgePanel';
 import { useKnowledgeBases } from '~/hooks/useKnowledgeBase';
-import { KnowledgeGroup, Profile } from '~/types';
+import { KnowledgeGroup as IKnowledgeGroup, Profile } from '~/types';
 import { getInitials } from '~/utils';
 
 type KnowledgeCardProps = {
@@ -93,7 +93,7 @@ const KnowledgeCard: React.FC<KnowledgeCardProps> = ({
 );
 
 type OutletContext = {
-  knowledgeGroup: KnowledgeGroup;
+  knowledgeGroup: IKnowledgeGroup;
   session: Session | null;
 };
 
