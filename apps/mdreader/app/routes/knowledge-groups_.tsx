@@ -77,29 +77,30 @@ const KnowledgeGroups = () => {
             </div>
 
             <div className="flex px-3">
-              {knowledgeGroup.KnowledgeGroupUsers?.map(
-                (knowledgeGroupUser, index) => (
-                  <Link
-                    key={index}
-                    to={`/profile/${knowledgeGroupUser.Profiles.login}`}
+              {[
+                { profile: knowledgeGroup.owner },
+                ...knowledgeGroup.knowledge_group_users,
+              ]?.map((knowledgeGroupUser, index) => (
+                <Link
+                  key={index}
+                  to={`/profile/${knowledgeGroupUser.profile.login}`}
+                >
+                  <Avatar
+                    className={classNames('border-2', {
+                      'z-0': index === 0,
+                      [`-ml-3 z-[${index}]`]: index > 0,
+                    })}
                   >
-                    <Avatar
-                      className={classNames('border-2', {
-                        'z-0': index === 0,
-                        [`-ml-3 z-[${index}]`]: index > 0,
-                      })}
-                    >
-                      <AvatarFallback>
-                        {getInitials(knowledgeGroupUser.Profiles.name)}
-                      </AvatarFallback>
-                      <AvatarImage
-                        src={knowledgeGroupUser.Profiles.photo}
-                        title={knowledgeGroupUser.Profiles.name}
-                      />
-                    </Avatar>
-                  </Link>
-                )
-              )}
+                    <AvatarFallback>
+                      {getInitials(knowledgeGroupUser.profile.name)}
+                    </AvatarFallback>
+                    <AvatarImage
+                      src={knowledgeGroupUser.profile.photo}
+                      title={knowledgeGroupUser.profile.name}
+                    />
+                  </Avatar>
+                </Link>
+              ))}
             </div>
           </div>
         ))}

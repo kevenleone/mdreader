@@ -27,7 +27,7 @@ export const useKnowledgeGroup = (slug: string) => {
           value: slug,
         },
       ],
-      select: '*, knowledge_group_users(*, profile(*))',
+      select: '*, owner(*), knowledge_group_users(*, profile(*))',
     })
   );
 };
@@ -36,6 +36,8 @@ export const useKnowledgeGroups = () => {
   const service = useKnowledgeGroupService();
 
   return useSWR('/knowledge-groups', () =>
-    service.getAll({ select: '*, knowledge_group_users(*, profile(*))' })
+    service.getAll({
+      select: '*, owner(*), knowledge_group_users(*, profile(*))',
+    })
   );
 };
