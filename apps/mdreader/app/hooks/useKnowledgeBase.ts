@@ -32,23 +32,34 @@ export const useKnowledgeBase = (slug: string) => {
   );
 };
 
-export const useKnowledgeBases = (knowledgeGroupId: number) => {
+export const useKnowledgeBases = (
+  knowledgeGroupId: number,
+  options: { search: string }
+) => {
   const service = useKnowledgeBaseService();
 
-  return useSWR(`/knowledge-bases/${knowledgeGroupId}`, () =>
-    service.getAll({
-      filters: [
-        {
-          property: 'knowledge_group_id',
-          operator: 'eq',
-          value: knowledgeGroupId,
+  return useSWR(
+    `/knowledge-bases/${knowledgeGroupId}?search=${options.search}`,
+    () =>
+      service.getAll({
+        filters: [
+          {
+            property: 'knowledge_group_id',
+            operator: 'eq',
+            value: knowledgeGroupId,
+          },
+          {
+            active: !!options.search,
+            property: 'tags',
+            operator: 'cs',
+            value: `{${options.search}}`,
+          },
+        ],
+        order: {
+          ascending: false,
+          property: 'created_at',
         },
-      ],
-      order: {
-        ascending: false,
-        property: 'created_at',
-      },
-      select: '*, owner(*)',
-    })
+        select: '*, owner(*)',
+      })
   );
 };

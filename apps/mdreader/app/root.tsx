@@ -2,7 +2,7 @@ import { SWRConfig } from 'swr';
 import { useState } from 'react';
 import { Toaster } from '@mdreader/interface';
 import { cssBundleHref } from '@remix-run/css-bundle';
-import type { LinksFunction, LoaderArgs } from '@remix-run/node';
+import type { LinksFunction, LoaderFunctionArgs } from '@remix-run/node';
 import {
   Links,
   LiveReload,
@@ -37,12 +37,12 @@ export const links: LinksFunction = () => [
 function localStorageProvider() {
   if (global?.window) {
     const map = new Map(
-      JSON.parse(sessionStorage.getItem('app-cache') || '[]')
+      JSON.parse(sessionStorage.getItem('@mdreader/swr-cache') || '[]')
     );
 
     window.addEventListener('beforeunload', () => {
       const appCache = JSON.stringify(Array.from(map.entries()));
-      sessionStorage.setItem('app-cache', appCache);
+      sessionStorage.setItem('@mdreader/swr-cache', appCache);
     });
 
     return map as any;
@@ -51,7 +51,7 @@ function localStorageProvider() {
   return new Map();
 }
 
-export async function loader({ request }: LoaderArgs) {
+export async function loader({ request }: LoaderFunctionArgs) {
   const ENV = {
     SUPABASE_KEY: process.env.SUPABASE_KEY as string,
     SUPABASE_URL: process.env.SUPABASE_URL as string,
@@ -118,11 +118,12 @@ export function ErrorBoundary({ error, ...props }: any) {
   return (
     <html>
       <head>
-        <title>Oh no!</title>
+        <title>Oops... | MD Reader</title>
         <Meta />
         <Links />
       </head>
       <body>
+        <div>Unable to load page</div>
         {JSON.stringify(error, null, 2)}
         {/* add the UI you want your users to see */}
         <Scripts />
