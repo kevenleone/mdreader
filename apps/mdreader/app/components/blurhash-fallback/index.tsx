@@ -6,7 +6,7 @@ type BlurhashFallbackProps = {
   blurhash?: string;
   description: string;
   src: string;
-  blurHashProps: Partial<typeof Blurhash.defaultProps>
+  blurHashProps?: Partial<typeof Blurhash.defaultProps>;
 };
 
 const BlurhashFallback: React.FC<BlurhashFallbackProps> = ({

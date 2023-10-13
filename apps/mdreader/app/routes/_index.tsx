@@ -1,9 +1,10 @@
-import { Button } from '@mdreader/interface';
-import { LoaderArgs } from '@remix-run/node';
-import { V2_MetaFunction } from '@remix-run/react';
+import { Button, buttonVariants } from '@mdreader/interface';
+import { LoaderFunctionArgs } from '@remix-run/node';
+import { MetaFunction } from '@remix-run/react';
 import { Github } from 'lucide-react';
 
-export const meta: V2_MetaFunction = ({ data: { origin } }) => {
+export const meta: MetaFunction = ({ data }) => {
+  const origin = (data as any).origin;
   return [
     { title: 'Home | MD Reader' },
     {
@@ -29,7 +30,7 @@ export const meta: V2_MetaFunction = ({ data: { origin } }) => {
   ];
 };
 
-export const loader = ({ request }: LoaderArgs) => ({
+export const loader = ({ request }: LoaderFunctionArgs) => ({
   origin: new URL(request.url).origin,
 });
 
@@ -37,10 +38,10 @@ export default function MarkdownPreview() {
   return (
     <div className="container flex flex-col justify-center overflow-hidden items-center min-h-[800px] gap-6 pb-8 pt-6 md:py-10">
       <div className="max-w-3xl space-y-8">
-        <h1 className="text-9xl p-4 text-center font-bold from-purple-600 via-pink-600 to-blue-600 bg-gradient-to-r bg-clip-text text-transparent">
+        <h1 className="xl:text-9xl transition-all text-6xl p-4 text-center font-bold from-purple-600 via-pink-600 to-blue-600 bg-gradient-to-r bg-clip-text text-transparent">
           MD Reader
         </h1>
-        <p className=" text-xl text-muted-foreground">
+        <p className="text-lg xl:text-2xl text-muted-foreground">
           Effortlessly organize your favorite Markdown into 'Articles' that are
           both easy to manage and share with others. Say goodbye to cluttered
           notes and hello to a sleek, streamlined system that puts your ideas
@@ -49,9 +50,14 @@ export default function MarkdownPreview() {
 
         <div className="flex gap-3">
           <Button>Start Explore</Button>
-          <Button variant="outline">
+          <a
+            className={buttonVariants({ variant: 'outline' })}
+            href="https://github.com/kevenleone/mdreader"
+            target="_blank"
+            rel="noopenner noreferrer"
+          >
             <Github className="mr-2" /> Github
-          </Button>
+          </a>
         </div>
       </div>
     </div>

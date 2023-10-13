@@ -1,6 +1,7 @@
 import { PostgrestSingleResponse, SupabaseClient } from '@supabase/supabase-js';
 
 type FilterOperator =
+  | 'cs'
   | 'eq'
   | 'gt'
   | 'gte'
@@ -40,6 +41,7 @@ export default class SupabaseService<ObjectResponse, ObjectEntry> {
     select = '*',
   }: {
     filters?: {
+      active?: boolean;
       property: string;
       operator: FilterOperator;
       value: any;
@@ -54,7 +56,11 @@ export default class SupabaseService<ObjectResponse, ObjectEntry> {
 
     if (filters) {
       for (const filter of filters) {
-        builder.filter(filter.property, filter.operator, filter.value);
+        const filterActive = filter?.active ?? true;
+
+        if (filterActive) {
+          builder.filter(filter.property, filter.operator, filter.value);
+        }
       }
     }
 
