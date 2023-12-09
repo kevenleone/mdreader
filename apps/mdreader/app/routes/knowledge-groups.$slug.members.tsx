@@ -181,7 +181,7 @@ const KnowledgeGroupMembers = () => {
       <div className="flex space-x-4 my-2">
         <Input
           value={username}
-          onChange={(event) => setUsername(event.target.value)}
+          onChange={(event: any) => setUsername(event.target.value)}
           placeholder="MD Reader Username"
         />
         <Button

@@ -1,4 +1,5 @@
-import { useLocation, useOutletContext } from '@remix-run/react';
+import { Button } from '@mdreader/interface';
+import { useLocation, useNavigate, useOutletContext } from '@remix-run/react';
 import { Session } from '@supabase/supabase-js';
 import EmptyState from '~/components/empty-state';
 import KnowledgeCard from '~/components/knowledge-group/knowledge-card';
@@ -15,6 +16,7 @@ type OutletContext = {
 const KnowledgeGroup = () => {
   const { search } = useLocation();
   const tag = new URLSearchParams(search).get('tag') as string;
+  const navigate = useNavigate();
 
   const { knowledgeGroup, session } = useOutletContext<OutletContext>();
   const { data, isLoading, mutate } = useKnowledgeBases(knowledgeGroup.id, {
@@ -25,7 +27,7 @@ const KnowledgeGroup = () => {
   const hasKnowledgeBase = knowledgeBases.length > 0;
 
   return (
-    <div>
+    <section>
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Knowledge Base</h1>
@@ -33,7 +35,17 @@ const KnowledgeGroup = () => {
             What about meet a new techonlogy every day? :)
           </p>
 
-          {tag && <span>Filter applied: {tag}</span>}
+          {tag && (
+            <span>
+              Tag: <code className="text-bold">{tag}</code>{' '}
+              <button
+                className="text-blue-700"
+                onClick={() => navigate('?tag=')}
+              >
+                Clear
+              </button>
+            </span>
+          )}
         </div>
 
         {session && hasKnowledgeBase && (
@@ -62,7 +74,7 @@ const KnowledgeGroup = () => {
           </EmptyState>
         </div>
       )}
-    </div>
+    </section>
   );
 };
 

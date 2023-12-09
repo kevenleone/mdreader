@@ -1,6 +1,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@mdreader/interface';
-import { Link, Outlet } from '@remix-run/react';
-import { LoaderArgs, V2_MetaFunction } from '@remix-run/node';
+import { Link, MetaFunction, Outlet } from '@remix-run/react';
+import { LoaderFunctionArgs } from '@remix-run/node';
 import BoringAvatar from 'boring-avatars';
 import classNames from 'clsx';
 
@@ -9,11 +9,11 @@ import { getInitials } from '~/utils';
 import KnowledgeGroupPanel from '~/components/panels/KnowledgeGroupPanel';
 import useSession from '~/hooks/useSession';
 
-export const loader = async ({ request }: LoaderArgs) => ({
+export const loader = async ({ request }: LoaderFunctionArgs) => ({
   origin: new URL(request.url).origin,
 });
 
-export const meta: V2_MetaFunction = ({ data: { origin } }) => {
+export const meta: MetaFunction = ({ data }) => {
   return [
     { title: 'Knowledge Groups | MD Reader' },
     {
@@ -22,7 +22,9 @@ export const meta: V2_MetaFunction = ({ data: { origin } }) => {
     },
     {
       property: 'og:image',
-      content: `${origin}/api/og?template=site&title=Knowledge Groups`,
+      content: `${
+        (data as any).origin
+      }/api/og?template=site&title=Knowledge Groups`,
     },
   ];
 };

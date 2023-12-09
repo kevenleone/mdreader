@@ -1,4 +1,10 @@
-import { Link, Outlet, V2_MetaFunction, useParams } from '@remix-run/react';
+import {
+  Link,
+  MetaFunction,
+  Outlet,
+  V2_MetaFunction,
+  useParams,
+} from '@remix-run/react';
 import { Separator } from '@mdreader/interface';
 import BoringAvatar from 'boring-avatars';
 import { ArrowLeft } from 'lucide-react';
@@ -7,11 +13,13 @@ import { SidebarNav } from '~/components/sidebar-nav';
 import { useKnowledgeGroup } from '~/hooks/useKnowledgeGroup';
 import { useMemo } from 'react';
 import useSession from '~/hooks/useSession';
-import { LoaderArgs } from '@remix-run/node';
+import { LoaderFunctionArgs } from '@remix-run/node';
 import { getSupabaseServerClient } from '~/services/supabase';
 import { KnowledgeGroupService } from '~/services/KnowledgeGroupService';
 
-export const meta: V2_MetaFunction = ({ data: { knowledgeGroup, origin } }) => {
+export const meta: MetaFunction<any> = ({
+  data: { knowledgeGroup, origin },
+}) => {
   return [
     { title: `${knowledgeGroup.name} | MD Reader` },
     {
@@ -25,7 +33,7 @@ export const meta: V2_MetaFunction = ({ data: { knowledgeGroup, origin } }) => {
   ];
 };
 
-export const loader = async ({ request, params }: LoaderArgs) => {
+export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const supabase = await getSupabaseServerClient(request);
 
   const knowledgeGroupService = new KnowledgeGroupService({ supabase });
@@ -52,17 +60,19 @@ const KnowledgeGroupOutlet = () => {
         title: 'Knowledge Base',
         href: '',
       },
-      {
-        title: 'Group Members',
-        href: 'members',
-      },
     ];
 
     if (knowledgeGroup?.owner.id === session?.user.id) {
-      sidebarNavItems.push({
-        title: 'Settings',
-        href: 'settings',
-      });
+      sidebarNavItems.push(
+        {
+          title: 'Group Members',
+          href: 'members',
+        },
+        {
+          title: 'Settings',
+          href: 'settings',
+        }
+      );
     }
 
     return sidebarNavItems;
@@ -73,10 +83,10 @@ const KnowledgeGroupOutlet = () => {
   }
 
   return (
-    <div className=" space-y-6 px-10 pb-16 md:block">
+    <div className="space-y-6 px-10 pb-16 md:block">
       <div className="space-y-0.5 flex justify-between">
         <div>
-          <Link to="./.." title="Go back">
+          <Link className="mt-2" to="./.." title="Go back">
             <ArrowLeft size={18} />
           </Link>
           <h2 className="text-2xl font-bold tracking-tight">
